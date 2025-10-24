@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự đoán Thu nhập</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        label { font-weight: bold; margin-bottom: -10px; }
+        input[type="number"], select { padding: 10px; border-radius: 4px; border: 1px solid #ccc; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        #result-container { margin-top: 20px; text-align: center; }
+        #result { font-size: 1.5em; font-weight: bold; color: #333; }
+        .loading { display: none; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Trang web Dự đoán Thu nhập</h1>
+        <p>Nhập thông tin nhân khẩu học để dự đoán thu nhập (trên hoặc dưới $50K/năm).</p>
+        
+        <form id="income-form">
+            <label for="age">Tuổi (Age):</label>
+            <input type="number" id="age" name="age" value="30" required>
+
+            <label for="workclass">Loại hình Công việc (Workclass):</label>
+            <select id="workclass" name="workclass">
+                <option value="Private">Tư nhân (Private)</option>
+                <option value="Self-emp-not-inc">Tự kinh doanh (Self-emp-not-inc)</option>
+                <option value="Local-gov">Chính phủ địa phương (Local-gov)</option>
+                <option value="State-gov">Chính phủ tiểu bang (State-gov)</option>
+                <option value="Federal-gov">Chính phủ liên bang (Federal-gov)</option>
+                <option value="Self-emp-inc">Tự kinh doanh (có đăng ký)</option>
+                <option value="Without-pay">Không lương</option>
+            </select>
+
+            <label for="education-num">Số năm Học vấn (Education-num):</label>
+            <input type="number" id="education-num" name="education-num" value="13" required>
+
+            <label for="marital-status">Tình trạng Hôn nhân (Marital-status):</label>
+            <select id="marital-status" name="marital-status">
+                <option value="Married-civ-spouse">Đã kết hôn (vợ/chồng dân sự)</option>
+                <option value="Never-married">Chưa kết hôn</option>
+                <option value="Divorced">Đã ly hôn</option>
+                <option value="Separated">Ly thân</option>
+                <option value="Widowed">Góa</option>
+            </select>
+            
+            <label for="hours-per-week">Số giờ làm mỗi tuần (Hours-per-week):</label>
+            <input type="number" id="hours-per-week" name="hours-per-week" value="40" required>
+
+            <label for="capital-gain">Lợi nhuận vốn (Capital-gain):</label>
+            <input type="number" id="capital-gain" name="capital-gain" value="0" required>
+
+            <label for="capital-loss">Tổn thất vốn (Capital-loss):</label>
+            <input type="number" id="capital-loss" name="capital-loss" value="0" required>
+
+            <button type="submit">Dự đoán</button>
+        </form>
+
+        <div id="result-container">
+            <h2>Kết quả Dự đoán:</h2>
+            <p class="loading" id="loading">Đang xử lý...</p>
+            <p id="result">---</p>
+        </div>
+    </div>
+
+<script>
+    document.getElementById('income-form').addEventListener('submit', function(e) {
+        e.preventDefault(); 
+
+        // Hiển thị trạng thái "Đang xử lý"
+            const resultEl = document.getElementById('result');
+            const loadingEl = document.getElementById('loading');
+            resultEl.innerText = '---';
+            loadingEl.style.display = 'block';
+
+        // 1. Thu thập dữ liệu từ các ô input
+            const data = {
+                'age': parseInt(document.getElementById('age').value),
+                'workclass': document.getElementById('workclass').value,
+                'education-num': parseInt(document.getElementById('education-num').value),
+                'marital-status': document.getElementById('marital-status').value,
+                'hours-per-week': parseInt(document.getElementById('hours-per-week').value),
+                'capital-gain': parseInt(document.getElementById('capital-gain').value),
+                'capital-loss': parseInt(document.getElementById('capital-loss').value)
+                
+                // Lưu ý: Chúng ta chỉ cần gửi các cột có trong form.
+                // Backend (app.py) sẽ tự động xử lý các cột còn lại.
+            };
+        // Gửi dữ liệu đến URL API Django
+        fetch('/predict/', {  // CHỈNH SỬA URL: '/predict/'
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Django cần token CSRF nếu là form truyền thống, 
+                // nhưng với fetch/JSON, chúng ta dùng @csrf_exempt trong views.py
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 3. Hiển thị kết quả
+            loadingEl.style.display = 'none';
+            if (data.prediction) {
+                resultEl.innerText = `Thu nhập: ${data.prediction}`;
+            } else {
+                resultEl.innerText = `Lỗi: ${data.error}`;
+            }
+        })
+        .catch(error => {
+           // 4. Xử lý nếu có lỗi
+            loadingEl.style.display = 'none';
+            console.error('Error:', error);
+            resultEl.innerText = 'Đã xảy ra lỗi khi kết nối server.';
+        });
+    });
+</script>
+</body>
+</html>
