@@ -7,12 +7,12 @@ import json
 # Import các biến model và model_columns từ apps.py
 from .apps import model, model_columns
 
-def home(request):
+def predict_page(request):
     """Render trang chủ (form nhập liệu)"""
-    return render(request, "predictor/index.html")
+    return render(request, "predictor/predict_page.html")
 
 @csrf_exempt
-def predict_income(request):
+def predict_request(request):
     """Xử lý yêu cầu dự đoán POST"""
     if request.method == 'POST':
         try:

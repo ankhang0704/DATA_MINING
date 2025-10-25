@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Trang Chủ{% endblock %}
+{% load static %}
+
+{% block content %}
+
+<body class="min-h-screen bg-base-200">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-8">Chào mừng đến với Ứng dụng Dự đoán Thu nhập</h1>
+        <p class="text-lg text-center mb-12">Sử dụng mô hình học máy tiên tiến để dự đoán mức thu nhập của bạn dựa trên
+            các đặc điểm cá nhân.</p>
+        <div class="flex justify-center">
+            <a href="{% url 'predict' %}" class="btn btn-primary btn-lg">Bắt đầu Dự đoán</a>
+        </div>
+    </div>
+</body>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load socialaccount %}
+
+{% block title %}Đăng nhập{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-base-200">
+    <div class="w-full max-w-md">
+        <div class="card bg-base-100 shadow-xl border border-base-300">
+            <div class="card-body">
+                <h2 class="text-center text-2xl font-bold">Đăng nhập</h2>
+                <p class="text-center text-sm text-base-content/70">
+                    Chào mừng bạn trở lại! Hãy đăng nhập để tiếp tục.
+                </p>
+
+                <!-- Hiển thị lỗi -->
+                {% if form.errors %}
+                <div class="alert alert-error mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>
+                        {% for error in form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </span>
+                </div>
+                {% endif %}
+
+                <!-- Form -->
+                <form method="post" class="mt-4 space-y-4">
+                    {% csrf_token %}
+                    <!-- Login Field -->
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text">Email đăng nhập</span>
+                        </div>
+                        <input type="email" name="{{ form.login.name }}" value="{{ form.login.value|default:'' }}"
+                            placeholder="Nhập địa chỉ email của bạn" class="input input-bordered w-full" required />
+                        {% if form.login.errors %}
+                        <div class="label">
+                            <span class="label-text-alt text-error">
+                                {% for error in form.login.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </span>
+                        </div>
+                        {% endif %}
+                    </label>
+
+                    <!-- Password Field -->
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text">Mật khẩu</span>
+                        </div>
+                        <input type="password" name="{{ form.password.name }}" placeholder="Mật khẩu"
+                            class="input input-bordered w-full" required />
+                        {% if form.password.errors %}
+                        <div class="label">
+                            <span class="label-text-alt text-error">
+                                {% for error in form.password.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </span>
+                        </div>
+                        {% endif %}
+                    </label>
+                    {% for field in form.hidden_fields %}
+                    {{ field}}
+                    {% endfor %}
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="remember" id="id_remember" class="checkbox checkbox-sm" />
+                            <span class="text-sm">Ghi nhớ đăng nhập</span>
+                        </label>
+                        <a href="{% url 'account_reset_password' %}" class="link link-primary text-sm">Quên mật
+                            khẩu?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full">Đăng nhập</button>
+                </form>
+
+                <!-- Divider -->
+                <div class="divider">Hoặc tiếp tục với</div>
+
+                <!-- Social Login -->
+                <a href="{% provider_login_url 'google' %}" class="btn btn-outline gap-2 w-full">
+                    <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z" />
+                    </svg>
+                    <span>Google</span>
+                </a>
+                <!-- Sign Up -->
+                <p class="mt-6 text-center text-sm">
+                    Chưa có tài khoản?
+                    <a href="{% url 'account_signup' %}" class="link link-primary">Đăng ký ngay</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

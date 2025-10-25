@@ -1,0 +1,747 @@
+{% extends "base.html" %}
+{% block title %}
+Lịch sử hoạt động - Web AI
+{% endblock %}
+{% block content %}
+<style>
+    .fade-in {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-left: 40px;
+        padding-bottom: 30px;
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: 12px;
+        top: 30px;
+        bottom: -10px;
+        width: 2px;
+        background: linear-gradient(to bottom, #667eea, #764ba2);
+    }
+
+    .timeline-item:last-child::before {
+        display: none;
+    }
+
+    .timeline-dot {
+        position: absolute;
+        left: 0;
+        top: 20px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+    }
+
+    .filter-chip {
+        transition: all 0.3s ease;
+    }
+
+    .filter-chip:hover {
+        transform: scale(1.05);
+    }
+
+    .activity-card {
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+    }
+
+    .activity-card:hover {
+        border-left-color: #667eea;
+        transform: translateX(5px);
+    }
+
+    .search-highlight {
+        background-color: yellow;
+        padding: 2px 4px;
+        border-radius: 2px;
+    }
+</style>
+</head>
+
+<body class="min-h-screen bg-base-200">
+    <!-- Hero Section -->
+    <div class="gradient-bg text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center fade-in">
+                <div class="avatar mb-6">
+                    <div class="w-24 h-24 rounded-full ring ring-white ring-offset-base-100 ring-offset-2">
+                        {% if user.socialaccount_set.all.0.get_avatar_url %}
+                        <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}"
+                            alt="{{ user.get_full_name|default:user.username }}">
+                        {% else %}
+                        <div
+                            class="w-full h-full bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold text-3xl">
+                            {{ user.get_full_name|default:user.username|slice:":2"|upper|default:"U" }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                    <i class="fas fa-history mr-3"></i>Lịch sử hoạt động
+                </h1>
+                <p class="text-xl max-w-2xl mx-auto leading-relaxed">
+                    Theo dõi tất cả hoạt động và thay đổi trong tài khoản của bạn
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                    <div class="card-body">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-base-content/70 text-sm">Tổng hoạt động</p>
+                                <h3 class="text-3xl font-bold text-primary">247</h3>
+                            </div>
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-chart-line text-primary text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                    <div class="card-body">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-base-content/70 text-sm">Hôm nay</p>
+                                <h3 class="text-3xl font-bold text-success">12</h3>
+                            </div>
+                            <div class="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-calendar-day text-success text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                    <div class="card-body">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-base-content/70 text-sm">Tuần này</p>
+                                <h3 class="text-3xl font-bold text-warning">45</h3>
+                            </div>
+                            <div class="w-16 h-16 bg-warning/10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-calendar-week text-warning text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                    <div class="card-body">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-base-content/70 text-sm">Tháng này</p>
+                                <h3 class="text-3xl font-bold text-info">127</h3>
+                            </div>
+                            <div class="w-16 h-16 bg-info/10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-calendar-alt text-info text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="card bg-base-100 shadow-xl mb-8 fade-in">
+                <div class="card-body">
+                    <div class="flex flex-col lg:flex-row gap-4">
+                        <!-- Search Bar -->
+                        <div class="flex-1">
+                            <div class="form-control">
+                                <div class="input-group">
+                                    <input type="text" id="searchInput" placeholder="Tìm kiếm hoạt động..."
+                                        class="input input-bordered w-full" />
+                                    <button class="btn btn-square btn-primary">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="form-control">
+                            <select class="select select-bordered" id="dateFilter">
+                                <option value="all">Tất cả thời gian</option>
+                                <option value="today">Hôm nay</option>
+                                <option value="week">7 ngày qua</option>
+                                <option value="month" selected>30 ngày qua</option>
+                                <option value="year">Năm nay</option>
+                            </select>
+                        </div>
+
+                        <!-- Export Button -->
+                        <button class="btn btn-outline btn-primary gap-2">
+                            <i class="fas fa-download"></i>
+                            Xuất dữ liệu
+                        </button>
+                    </div>
+
+                    <!-- Filter Chips -->
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <button class="btn btn-sm btn-primary filter-chip" data-filter="all">
+                            <i class="fas fa-list mr-1"></i>Tất cả
+                        </button>
+                        <button class="btn btn-sm btn-outline filter-chip" data-filter="scan">
+                            <i class="fas fa-search mr-1"></i>Quét URL
+                        </button>
+                        <button class="btn btn-sm btn-outline filter-chip" data-filter="security">
+                            <i class="fas fa-shield-alt mr-1"></i>Bảo mật
+                        </button>
+                        <button class="btn btn-sm btn-outline filter-chip" data-filter="profile">
+                            <i class="fas fa-user mr-1"></i>Hồ sơ
+                        </button>
+                        <button class="btn btn-sm btn-outline filter-chip" data-filter="report">
+                            <i class="fas fa-file-alt mr-1"></i>Báo cáo
+                        </button>
+                        <button class="btn btn-sm btn-outline filter-chip" data-filter="login">
+                            <i class="fas fa-sign-in-alt mr-1"></i>Đăng nhập
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Timeline -->
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                <!-- Timeline Column -->
+                <div class="xl:col-span-2">
+                    <div class="card bg-base-100 shadow-xl fade-in">
+                        <div class="card-body">
+                            <h3 class="card-title text-2xl mb-6">
+                                <i class="fas fa-clock text-primary mr-2"></i>
+                                Dòng thời gian
+                            </h3>
+
+                            <div id="activityTimeline">
+                                <!-- Today -->
+                                <div class="mb-8">
+                                    <h4 class="text-lg font-bold mb-4 flex items-center gap-2">
+                                        <i class="fas fa-calendar-day text-primary"></i>
+                                        Hôm nay
+                                    </h4>
+
+                                    <div class="timeline-item" data-category="scan">
+                                        <div class="timeline-dot bg-success shadow-lg">
+                                            <i class="fas fa-check text-white text-xs"></i>
+                                        </div>
+                                        <div class="activity-card card bg-success/5 shadow hover-lift">
+                                            <div class="card-body p-4">
+                                                <div class="flex items-start justify-between">
+                                                    <div class="flex-1">
+                                                        <h5 class="font-bold text-success flex items-center gap-2">
+                                                            <i class="fas fa-search"></i>
+                                                            Quét URL thành công
+                                                        </h5>
+                                                        <p class="text-sm text-base-content/70 mt-1">
+                                                            Đã quét và xác nhận <span
+                                                                class="font-semibold">example.com</span> là an toàn
+                                                        </p>
+                                                        <div
+                                                            class="flex items-center gap-4 mt-2 text-xs text-base-content/60">
+                                                            <span><i class="fas fa-clock mr-1"></i>2 giờ trước</span>
+                                                            <span><i class="fas fa-map-marker-alt mr-1"></i>Hà Nội, Việt
+                                                                Nam</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="badge badge-success gap-1">
+                                                        <i class="fas fa-shield-check"></i>
+                                                        An toàn
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-item" data-category="profile">
+                                        <div class="timeline-dot bg-info shadow-lg">
+                                            <i class="fas fa-user text-white text-xs"></i>
+                                        </div>
+                                        <div class="activity-card card bg-info/5 shadow hover-lift">
+                                            <div class="card-body p-4">
+                                                <div class="flex items-start justify-between">
+                                                    <div class="flex-1">
+                                                        <h5 class="font-bold text-info flex items-center gap-2">
+                                                            <i class="fas fa-edit"></i>
+                                                            Cập nhật hồ sơ
+                                                        </h5>
+                                                        <p class="text-sm text-base-content/70 mt-1">
+                                                            Đã thay đổi ảnh đại diện và thông tin cá nhân
+                                                        </p>
+                                                        <div
+                                                            class="flex items-center gap-4 mt-2 text-xs text-base-content/60">
+                                                            <span><i class="fas fa-clock mr-1"></i>5 giờ trước</span>
+                                                            <span><i class="fas fa-desktop mr-1"></i>Chrome trên
+                                                                Windows</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="badge badge-info gap-1">
+                                                        <i class="fas fa-check"></i>
+                                                        Hoàn thành
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-item" data-category="login">
+                                        <div class="timeline-dot bg-primary shadow-lg">
+                                            <i class="fas fa-sign-in-alt text-white text-xs"></i>
+                                        </div>
+                                        <div class="activity-card card bg-primary/5 shadow hover-lift">
+                                            <div class="card-body p-4">
+                                                <div class="flex items-start justify-between">
+                                                    <div class="flex-1">
+                                                        <h5 class="font-bold text-primary flex items-center gap-2">
+                                                            <i class="fab fa-google"></i>
+                                                            Đăng nhập với Google
+                                                        </h5>
+                                                        <p class="text-sm text-base-content/70 mt-1">
+                                                            Đăng nhập thành công từ thiết bị mới
+                                                        </p>
+                                                        <div
+                                                            class="flex items-center gap-4 mt-2 text-xs text-base-content/60">
+                                                            <span><i class="fas fa-clock mr-1"></i>8 giờ trước</span>
+                                                            <span><i class="fas fa-globe mr-1"></i>IP:
+                                                                123.456.789.0</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="badge badge-primary gap-1">
+                                                        <i class="fas fa-check-circle"></i>
+                                                        Thành công
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Yesterday -->
+                                <div class="mb-8">
+                                    <h4 class="text-lg font-bold mb-4 flex items-center gap-2">
+                                        <i class="fas fa-calendar text-primary"></i>
+                                        Hôm qua
+                                    </h4>
+
+                                    <div class="timeline-item" data-category="scan">
+                                        <div class="timeline-dot bg-error shadow-lg">
+                                            <i class="fas fa-exclamation text-white text-xs"></i>
+                                        </div>
+                                        <div class="activity-card card bg-error/5 shadow hover-lift">
+                                            <div class="card-body p-4">
+                                                <div class="flex items-start justify-between">
+                                                    <div class="flex-1">
+                                                        <h5 class="font-bold text-error flex items-center gap-2">
+                                                            <i class="fas fa-exclamation-triangle"></i>
+                                                            Phát hiện trang phishing
+                                                        </h5>
+                                                        <p class="text-sm text-base-content/70 mt-1">
+                                                            Đã chặn truy cập vào <span
+                                                                class="font-semibold">suspicious-site.com</span>
+                                                        </p>
+                                                        <div
+                                                            class="flex items-center gap-4 mt-2 text-xs text-base-content/60">
+                                                            <span><i class="fas fa-clock mr-1"></i>1 ngày trước</span>
+                                                            <span><i class="fas fa-shield-alt mr-1"></i>Mức độ:
+                                                                Cao</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="badge badge-error gap-1">
+                                                        <i class="fas fa-ban"></i>
+                                                        Nguy hiểm
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-item" data-category="report">
+                                        <div class="timeline-dot bg-warning shadow-lg">
+                                            <i class="fas fa-file-alt text-white text-xs"></i>
+                                        </div>
+                                        <div class="activity-card card bg-warning/5 shadow hover-lift">
+                                            <div class="card-body p-4">
+                                                <div class="flex items-start justify-between">
+                                                    <div class="flex-1">
+                                                        <h5 class="font-bold text-warning flex items-center gap-2">
+                                                            <i class="fas fa-file-pdf"></i>
+                                                            Tạo báo cáo bảo mật
+                                                        </h5>
+                                                        <p class="text-sm text-base-content/70 mt-1">
+                                                            Đã xuất báo cáo tuần với 45 hoạt động
+                                                        </p>
+                                                        <div
+                                                            class="flex items-center gap-4 mt-2 text-xs text-base-content/60">
+                                                            <span><i class="fas fa-clock mr-1"></i>1 ngày trước</span>
+                                                            <span><i class="fas fa-download mr-1"></i>Đã tải
+                                                                xuống</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="badge badge-warning gap-1">
+                                                        <i class="fas fa-check"></i>
+                                                        Hoàn thành
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-item" data-category="security">
+                                        <div class="timeline-dot bg-success shadow-lg">
+                                            <i class="fas fa-shield-alt text-white text-xs"></i>
+                                        </div>
+                                        <div class="activity-card card bg-success/5 shadow hover-lift">
+                                            <div class="card-body p-4">
+                                                <div class="flex items-start justify-between">
+                                                    <div class="flex-1">
+                                                        <h5 class="font-bold text-success flex items-center gap-2">
+                                                            <i class="fas fa-lock"></i>
+                                                            Bật xác thực 2 bước
+                                                        </h5>
+                                                        <p class="text-sm text-base-content/70 mt-1">
+                                                            Đã kích hoạt xác thực hai yếu tố cho tài khoản
+                                                        </p>
+                                                        <div
+                                                            class="flex items-center gap-4 mt-2 text-xs text-base-content/60">
+                                                            <span><i class="fas fa-clock mr-1"></i>1 ngày trước</span>
+                                                            <span><i class="fas fa-mobile-alt mr-1"></i>Qua SMS</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="badge badge-success gap-1">
+                                                        <i class="fas fa-check-circle"></i>
+                                                        Đã bật
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- This Week -->
+                                <div class="mb-8">
+                                    <h4 class="text-lg font-bold mb-4 flex items-center gap-2">
+                                        <i class="fas fa-calendar-week text-primary"></i>
+                                        Tuần này
+                                    </h4>
+
+                                    <div class="timeline-item" data-category="scan">
+                                        <div class="timeline-dot bg-success shadow-lg">
+                                            <i class="fas fa-check text-white text-xs"></i>
+                                        </div>
+                                        <div class="activity-card card bg-base-200 shadow hover-lift">
+                                            <div class="card-body p-4">
+                                                <div class="flex items-start justify-between">
+                                                    <div class="flex-1">
+                                                        <h5 class="font-bold flex items-center gap-2">
+                                                            <i class="fas fa-envelope"></i>
+                                                            Quét email
+                                                        </h5>
+                                                        <p class="text-sm text-base-content/70 mt-1">
+                                                            Đã phân tích 15 email và phát hiện 2 email đáng ngờ
+                                                        </p>
+                                                        <div
+                                                            class="flex items-center gap-4 mt-2 text-xs text-base-content/60">
+                                                            <span><i class="fas fa-clock mr-1"></i>3 ngày trước</span>
+                                                            <span><i class="fas fa-chart-bar mr-1"></i>Tỷ lệ:
+                                                                13.3%</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="badge badge-ghost gap-1">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        Đã xử lý
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-item" data-category="profile">
+                                        <div class="timeline-dot bg-info shadow-lg">
+                                            <i class="fas fa-cog text-white text-xs"></i>
+                                        </div>
+                                        <div class="activity-card card bg-base-200 shadow hover-lift">
+                                            <div class="card-body p-4">
+                                                <div class="flex items-start justify-between">
+                                                    <div class="flex-1">
+                                                        <h5 class="font-bold flex items-center gap-2">
+                                                            <i class="fas fa-bell"></i>
+                                                            Thay đổi cài đặt thông báo
+                                                        </h5>
+                                                        <p class="text-sm text-base-content/70 mt-1">
+                                                            Đã bật thông báo email cho các cảnh báo bảo mật
+                                                        </p>
+                                                        <div
+                                                            class="flex items-center gap-4 mt-2 text-xs text-base-content/60">
+                                                            <span><i class="fas fa-clock mr-1"></i>5 ngày trước</span>
+                                                            <span><i class="fas fa-toggle-on mr-1"></i>Đã bật</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="badge badge-ghost gap-1">
+                                                        <i class="fas fa-check"></i>
+                                                        Đã lưu
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="flex justify-center mt-8">
+                                <div class="join">
+                                    <button class="join-item btn btn-sm">«</button>
+                                    <button class="join-item btn btn-sm btn-active">1</button>
+                                    <button class="join-item btn btn-sm">2</button>
+                                    <button class="join-item btn btn-sm">3</button>
+                                    <button class="join-item btn btn-sm">4</button>
+                                    <button class="join-item btn btn-sm">»</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Activity Summary -->
+                    <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                        <div class="card-body">
+                            <h3 class="card-title text-xl mb-4">
+                                <i class="fas fa-chart-pie text-primary mr-2"></i>
+                                Tổng quan
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-sm">Quét URL</span>
+                                        <span class="text-sm font-bold">127</span>
+                                    </div>
+                                    <progress class="progress progress-primary" value="127" max="200"></progress>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-sm">Bảo mật</span>
+                                        <span class="text-sm font-bold">45</span>
+                                    </div>
+                                    <progress class="progress progress-success" value="45" max="200"></progress>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-sm">Hồ sơ</span>
+                                        <span class="text-sm font-bold">32</span>
+                                    </div>
+                                    <progress class="progress progress-info" value="32" max="200"></progress>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-sm">Báo cáo</span>
+                                        <span class="text-sm font-bold">15</span>
+                                    </div>
+                                    <progress class="progress progress-warning" value="15" max="200"></progress>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-sm">Đăng nhập</span>
+                                        <span class="text-sm font-bold">28</span>
+                                    </div>
+                                    <progress class="progress progress-secondary" value="28" max="200"></progress>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                        <div class="card-body">
+                            <h3 class="card-title text-xl mb-4">
+                                <i class="fas fa-bolt text-primary mr-2"></i>
+                                Thao tác nhanh
+                            </h3>
+                            <div class="space-y-3">
+                                <a href="profile.html" class="btn btn-primary w-full justify-start gap-3">
+                                    <i class="fas fa-user"></i>
+                                    Xem hồ sơ
+                                </a>
+                                <a href="url-scanner.html" class="btn btn-success w-full justify-start gap-3">
+                                    <i class="fas fa-search"></i>
+                                    Quét URL mới
+                                </a>
+                                <button class="btn btn-warning w-full justify-start gap-3">
+                                    <i class="fas fa-download"></i>
+                                    Xuất lịch sử
+                                </button>
+                                <button class="btn btn-error btn-outline w-full justify-start gap-3">
+                                    <i class="fas fa-trash"></i>
+                                    Xóa lịch sử
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Devices -->
+                    <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                        <div class="card-body">
+                            <h3 class="card-title text-xl mb-4">
+                                <i class="fas fa-laptop text-primary mr-2"></i>
+                                Thiết bị gần đây
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3 p-3 bg-base-200 rounded-lg">
+                                    <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-desktop text-primary"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-semibold text-sm">Windows PC</p>
+                                        <p class="text-xs text-base-content/60">Chrome • Hà Nội</p>
+                                    </div>
+                                    <div class="badge badge-success badge-sm">Hiện tại</div>
+                                </div>
+                                <div class="flex items-center gap-3 p-3 bg-base-200 rounded-lg">
+                                    <div class="w-10 h-10 bg-info/10 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-mobile-alt text-info"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-semibold text-sm">iPhone 14</p>
+                                        <p class="text-xs text-base-content/60">Safari • TP.HCM</p>
+                                    </div>
+                                    <div class="badge badge-ghost badge-sm">2h trước</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Filter functionality
+        const filterButtons = document.querySelectorAll('.filter-chip');
+        const timelineItems = document.querySelectorAll('.timeline-item');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const filter = this.dataset.filter;
+
+                // Update active button
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-outline');
+                });
+                this.classList.add('btn-primary');
+                this.classList.remove('btn-outline');
+
+                // Filter timeline items
+                timelineItems.forEach(item => {
+                    if (filter === 'all' || item.dataset.category === filter) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateY(0)';
+                        }, 10);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(-20px)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+
+            timelineItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Date filter functionality
+        const dateFilter = document.getElementById('dateFilter');
+        dateFilter.addEventListener('change', function () {
+            // In a real app, this would filter by actual dates
+            console.log('Filter by:', this.value);
+        });
+
+        // Smooth animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Theme toggle
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+    </script>
+</body>
+
+</html>
+
+{% endblock %}

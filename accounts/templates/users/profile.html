@@ -1,0 +1,597 @@
+{% extends 'base.html' %}
+{% block title %}Hồ sơ cá nhân - CheckPhish{% endblock %}
+{% block content %}
+<style>
+    .fade-in {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .bounce-in {
+        animation: bounceIn 0.6s ease-out;
+    }
+
+    @keyframes bounceIn {
+        0% {
+            transform: scale(0.3);
+            opacity: 0;
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        70% {
+            transform: scale(0.9);
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .glass-effect {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .pulse-avatar {
+        animation: pulseAvatar 2s infinite;
+    }
+
+    @keyframes pulseAvatar {
+
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+        }
+
+        50% {
+            box-shadow: 0 0 0 20px rgba(59, 130, 246, 0);
+        }
+    }
+
+    .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Added Google connected styling for Django-allauth users */
+    .google-connected {
+        border: 3px solid #4285f4;
+        box-shadow: 0 0 20px rgba(66, 133, 244, 0.3);
+    }
+</style>
+</head>
+
+<body class="min-h-screen bg-base-200">
+    <div class="gradient-bg text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center fade-in">
+                <div class="avatar mb-6">
+                    <div class="w-32 h-32 rounded-full ring ring-white ring-offset-base-100 ring-offset-2 pulse-avatar">
+                        {% if google_account and google_account.get_avatar_url %}
+                        <img src="{{ google_account.get_avatar_url }}"
+                            alt="{{ user.get_full_name|default:user.username }}"
+                            class="w-full h-full rounded-full object-cover">
+                        {% else %}
+                        <div
+                            class="w-full h-full bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold text-4xl">
+                            {{ user.get_full_name|default:user.username|default:"User"|slice:":2"|upper }}
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                    <i class="fas fa-user-circle mr-3"></i>Hồ sơ của {{ user.get_full_name|default:user.username }}
+                </h1>
+                <p class="text-xl max-w-2xl mx-auto leading-relaxed">
+                    Quản lý thông tin cá nhân và theo dõi hoạt động bảo mật của bạn
+                </p>
+                <div class="mt-8">
+                    <div class="stats stats-horizontal shadow glass-effect">
+
+                        <div class="stat">
+                            <div class="stat-figure text-primary"><i class="fas fa-shield-alt text-2xl"></i></div>
+                            <div class="stat-title text-white">URL đã quét</div>
+                            <div class="stat-value text-white">{{ scanned_urls|default:0 }}
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-figure text-success"><i class="fas fa-check-circle text-2xl"></i></div>
+                            <div class="stat-title text-white">Tỷ lệ an toàn</div>
+                            <div class="stat-value text-white">{{ safe_rate|default:100 }}%
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-figure text-warning"><i class="fas fa-exclamation-triangle text-2xl"></i>
+                            </div>
+                            <div class="stat-title text-white">Phát hiện</div>
+                            <div class="stat-value text-white">{{ detections|default:0 }}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Profile Header Card -->
+            <div class="card bg-base-100 shadow-2xl mb-8 hover-lift fade-in">
+                <div class="card-body">
+                    <div class="flex flex-col lg:flex-row items-center gap-8">
+                        <!-- Avatar Section -->
+                        <div class="relative group">
+                            <div class="avatar">
+                                <!-- Updated main avatar to use Django social account data -->
+                                <div
+                                    class="w-32 h-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-4 {% if user.socialaccount_set.all %}google-connected{% endif %}">
+                                    {% if user.socialaccount_set.all.0.get_avatar_url %}
+                                    <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}"
+                                        alt="{{ user.get_full_name|default:user.username }}"
+                                        class="w-full h-full rounded-full object-cover">
+                                    {% else %}
+                                    <div
+                                        class="w-full h-full bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold text-4xl">
+                                        {{ user.get_full_name|default:user.username|slice:":2"|upper|default:"U" }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <button
+                                class="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <i class="fas fa-camera text-white text-2xl"></i>
+                            </button>
+                            <!-- Social login indicator shows Google connection status -->
+                            <div
+                                class="absolute -bottom-2 -right-2 w-10 h-10 {% if user.socialaccount_set.all %}bg-success{% else %}bg-error{% endif %} rounded-full flex items-center justify-center shadow-lg border-4 border-base-100">
+                                <i class="fab fa-google text-white"></i>
+                            </div>
+                        </div>
+
+                        <!-- User Info -->
+                        <div class="flex-1 text-center lg:text-left">
+                            <!-- Updated user name and email to use Django user data -->
+                            <h2 class="text-3xl font-bold mb-2">
+                                {% if user.socialaccount_set.all.0.extra_data.name %}
+                                {{ user.socialaccount_set.all.0.extra_data.name }}
+                                {% else %}
+                                {{ user.get_full_name|default:user.username }}
+                                {% endif %}
+                            </h2>
+                            <p class="text-base-content/70 text-lg mb-4">{{ user.email }}</p>
+
+                            <!-- Badges -->
+                            <div class="flex flex-wrap justify-center lg:justify-start gap-2 mb-6">
+                                <div class="badge badge-primary badge-lg gap-2">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Thành viên từ {{ user.date_joined|date:"M Y" }}
+                                </div>
+                                <!-- Verification badge based on email verification -->
+                                <div
+                                    class="badge {% if user.emailaddress_set.all.0.verified %}badge-success{% else %}badge-warning{% endif %} badge-lg gap-2">
+                                    <i
+                                        class="fas fa-{% if user.emailaddress_set.all.0.verified %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                                    {% if user.emailaddress_set.all.0.verified %}Đã xác thực{% else %}Chưa xác thực
+                                    {% endif %}
+                                </div>
+                                <!-- Google badge based on social account connection -->
+                                <div
+                                    class="badge {% if user.socialaccount_set.all %}badge-info{% else %}badge-error{% endif %} badge-lg gap-2">
+                                    <i class="fab fa-google"></i>
+                                    {% if user.socialaccount_set.all %}
+                                    Đã kết nối
+                                    {% else %}
+                                    Chưa kết nối
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex flex-wrap justify-center lg:justify-start gap-3">
+                                <button onclick="openEditModal()" class="btn btn-primary gap-2">
+                                    <i class="fas fa-edit"></i>
+                                    Chỉnh sửa hồ sơ
+                                </button>
+                                <button class="btn btn-outline gap-2">
+                                    <i class="fas fa-share-alt"></i>
+                                    Chia sẻ hồ sơ
+                                </button>
+                                <!-- Show logout button for authenticated users -->
+                                <a href="{% url 'account_logout' %}" class="btn btn-ghost gap-2">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Đăng xuất
+                                </a>
+                                <button class="btn btn-ghost gap-2">
+                                    <i class="fas fa-cog"></i>
+                                    Cài đặt
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                <!-- Left Column -->
+                <div class="xl:col-span-2 space-y-8">
+                    <!-- Statistics Card -->
+                    <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                        <div class="card-body">
+                            <h3 class="card-title text-2xl mb-6">
+                                <i class="fas fa-chart-bar text-primary mr-2"></i>
+                                Thống kê hoạt động
+                            </h3>
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div class="stat bg-primary/10 rounded-xl">
+                                    <div class="stat-figure text-primary">
+                                        <i class="fas fa-search text-2xl"></i>
+                                    </div>
+                                    <div class="stat-title">URL đã quét</div>
+                                    <div class="stat-value text-primary">127</div>
+                                    <div class="stat-desc">↗︎ 12% (30 ngày)</div>
+                                </div>
+                                <div class="stat bg-success/10 rounded-xl">
+                                    <div class="stat-figure text-success">
+                                        <i class="fas fa-shield-check text-2xl"></i>
+                                    </div>
+                                    <div class="stat-title">URL an toàn</div>
+                                    <div class="stat-value text-success">98</div>
+                                    <div class="stat-desc">↗︎ 8% (30 ngày)</div>
+                                </div>
+                                <div class="stat bg-error/10 rounded-xl">
+                                    <div class="stat-figure text-error">
+                                        <i class="fas fa-exclamation-triangle text-2xl"></i>
+                                    </div>
+                                    <div class="stat-title">URL nguy hiểm</div>
+                                    <div class="stat-value text-error">29</div>
+                                    <div class="stat-desc">↘︎ 5% (30 ngày)</div>
+                                </div>
+                                <div class="stat bg-warning/10 rounded-xl">
+                                    <div class="stat-figure text-warning">
+                                        <i class="fas fa-file-alt text-2xl"></i>
+                                    </div>
+                                    <div class="stat-title">Báo cáo</div>
+                                    <div class="stat-value text-warning">15</div>
+                                    <div class="stat-desc">↗︎ 3% (30 ngày)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity Card -->
+                    <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                        <div class="card-body">
+                            <h3 class="card-title text-2xl mb-6">
+                                <i class="fas fa-history text-primary mr-2"></i>
+                                Hoạt động gần đây
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle text-2xl"></i>
+                                    <div>
+                                        <h4 class="font-bold">Quét URL thành công</h4>
+                                        <div class="text-xs">example.com - 2 giờ trước</div>
+                                    </div>
+                                    <div class="badge badge-success">An toàn</div>
+                                </div>
+                                <div class="alert alert-error">
+                                    <i class="fas fa-exclamation-triangle text-2xl"></i>
+                                    <div>
+                                        <h4 class="font-bold">Phát hiện trang phishing</h4>
+                                        <div class="text-xs">suspicious-site.com - 1 ngày trước</div>
+                                    </div>
+                                    <div class="badge badge-error">Nguy hiểm</div>
+                                </div>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-file-alt text-2xl"></i>
+                                    <div>
+                                        <h4 class="font-bold">Tạo báo cáo bảo mật</h4>
+                                        <div class="text-xs">Báo cáo tuần - 3 ngày trước</div>
+                                    </div>
+                                    <div class="badge badge-info">Hoàn thành</div>
+                                </div>
+                            </div>
+                            <div class="card-actions justify-center mt-6">
+                                <button class="btn btn-outline btn-primary">
+                                    <i class="fas fa-eye mr-2"></i>
+                                    Xem tất cả hoạt động
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="space-y-8">
+                    <!-- Quick Actions Card -->
+                    <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                        <div class="card-body">
+                            <h3 class="card-title text-xl mb-6">
+                                <i class="fas fa-bolt text-primary mr-2"></i>
+                                Thao tác nhanh
+                            </h3>
+                            <div class="space-y-3">
+                                <a href="scanner.html" class="btn btn-primary w-full justify-start gap-3">
+                                    <i class="fas fa-search"></i>
+                                    Quét URL mới
+                                </a>
+                                <button class="btn btn-success w-full justify-start gap-3">
+                                    <i class="fas fa-file-alt"></i>
+                                    Tạo báo cáo
+                                </button>
+                                <button class="btn btn-warning w-full justify-start gap-3">
+                                    <i class="fas fa-download"></i>
+                                    Xuất dữ liệu
+                                </button>
+                                <button class="btn btn-info w-full justify-start gap-3">
+                                    <i class="fas fa-shield-alt"></i>
+                                    Kiểm tra bảo mật
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account Settings Card -->
+                    <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                        <div class="card-body">
+                            <h3 class="card-title text-xl mb-6">
+                                <i class="fas fa-cog text-primary mr-2"></i>
+                                Cài đặt tài khoản
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="form-control">
+                                    <label class="label cursor-pointer">
+                                        <span class="label-text">Thông báo email</span>
+                                        <input type="checkbox" class="toggle toggle-primary" checked />
+                                    </label>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label cursor-pointer">
+                                        <span class="label-text">Chế độ tối</span>
+                                        <input type="checkbox" class="toggle toggle-primary" />
+                                    </label>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label cursor-pointer">
+                                        <span class="label-text">Xác thực 2 bước</span>
+                                        <input type="checkbox" class="toggle toggle-success" checked />
+                                    </label>
+                                </div>
+                                <div class="divider"></div>
+                                <a href="{% url 'account_logout' %}" class="btn btn-error btn-outline w-full gap-2">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Đăng xuất
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Help & Support Card -->
+                    <div
+                        class="card bg-gradient-to-br from-primary to-secondary text-primary-content shadow-xl hover-lift fade-in">
+                        <div class="card-body">
+                            <h3 class="card-title text-xl mb-4">
+                                <i class="fas fa-question-circle mr-2"></i>
+                                Cần hỗ trợ?
+                            </h3>
+                            <p class="mb-4 opacity-90">
+                                Chúng tôi luôn sẵn sàng giúp đỡ bạn. Liên hệ với đội ngũ hỗ trợ 24/7.
+                            </p>
+                            <div class="card-actions">
+                                <a href="contact.html" class="btn btn-primary-content gap-2">
+                                    <i class="fas fa-envelope"></i>
+                                    Liên hệ hỗ trợ
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <dialog id="editProfileModal" class="modal">
+        <div class="modal-box w-11/12 max-w-2xl">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-2xl mb-6">
+                <i class="fas fa-edit text-primary mr-2"></i>
+                Chỉnh sửa hồ sơ
+            </h3>
+
+            <form id="profileForm" class="space-y-6">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">
+                                <i class="fas fa-user mr-1"></i>Họ và tên
+                            </span>
+                        </label>
+                        <!-- Pre-populate with Django user data -->
+                        <input type="text" class="input input-bordered"
+                            value="{{ user.get_full_name|default:user.username }}" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">
+                                <i class="fas fa-envelope mr-1"></i>Email
+                            </span>
+                        </label>
+                        <input type="email" class="input input-bordered" value="{{ user.email }}" />
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">
+                                <i class="fas fa-phone mr-1"></i>Số điện thoại
+                            </span>
+                        </label>
+                        <input type="tel" class="input input-bordered" placeholder="+84 123 456 789" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">
+                                <i class="fas fa-birthday-cake mr-1"></i>Ngày sinh
+                            </span>
+                        </label>
+                        <input type="date" class="input input-bordered" />
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-medium">
+                            <i class="fas fa-info-circle mr-1"></i>Giới thiệu
+                        </span>
+                    </label>
+                    <textarea class="textarea textarea-bordered h-24"
+                        placeholder="Viết vài dòng về bản thân..."></textarea>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-medium">
+                            <i class="fas fa-image mr-1"></i>Ảnh đại diện
+                        </span>
+                    </label>
+                    <input type="file" class="file-input file-input-bordered w-full" accept="image/*" />
+                </div>
+
+                <div class="modal-action">
+                    <button type="submit" class="btn btn-primary gap-2">
+                        <i class="fas fa-save"></i>
+                        Lưu thay đổi
+                    </button>
+                    <button type="button" onclick="closeEditModal()" class="btn btn-ghost">
+                        Hủy
+                    </button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <script>
+        function openEditModal() {
+            document.getElementById('editProfileModal').showModal();
+        }
+
+        function closeEditModal() {
+            document.getElementById('editProfileModal').close();
+        }
+
+        // Profile form submission
+        document.getElementById('profileForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Show loading toast
+            const toast = document.createElement('div');
+            toast.className = 'toast toast-top toast-end';
+            toast.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Đang cập nhật hồ sơ...</span>
+                </div>
+            `;
+            document.body.appendChild(toast);
+
+            // Simulate API call
+            setTimeout(() => {
+                toast.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Cập nhật hồ sơ thành công!</span>
+                    </div>
+                `;
+
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                    closeEditModal();
+                }, 2000);
+            }, 1500);
+        });
+
+        // Smooth animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Theme toggle functionality
+        const themeToggle = document.querySelector('input[type="checkbox"]:nth-of-type(2)');
+        if (themeToggle) {
+            themeToggle.addEventListener('change', function () {
+                const html = document.documentElement;
+                if (this.checked) {
+                    html.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    html.setAttribute('data-theme', 'light');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                if (savedTheme === 'dark') {
+                    themeToggle.checked = true;
+                }
+            }
+        }
+    </script>
+</body>
+{% endblock %}

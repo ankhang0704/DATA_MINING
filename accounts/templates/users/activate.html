@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+{% block title %}
+Kích hoạt tài khoản - Web AI
+{% endblock %}
+{% block content %}
+<style>
+    .fade-in {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .bounce-in {
+        animation: bounceIn 0.8s ease-out;
+    }
+
+    @keyframes bounceIn {
+        0% {
+            transform: scale(0.3);
+            opacity: 0;
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        70% {
+            transform: scale(0.9);
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .pulse-icon {
+        animation: pulseIcon 2s infinite;
+    }
+
+    @keyframes pulseIcon {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+    }
+
+    .success-checkmark {
+        animation: checkmark 0.8s ease-in-out;
+    }
+
+    @keyframes checkmark {
+        0% {
+            transform: scale(0) rotate(0deg);
+        }
+
+        50% {
+            transform: scale(1.2) rotate(180deg);
+        }
+
+        100% {
+            transform: scale(1) rotate(360deg);
+        }
+    }
+</style>
+</head>
+
+<body class="min-h-screen bg-base-200">
+    Hero Section
+    <div class="gradient-bg text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center fade-in">
+                <div class="mb-6">
+                    <i class="fas fa-envelope-open-text text-6xl pulse-icon"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                    Kích hoạt tài khoản
+                </h1>
+                <p class="text-xl max-w-2xl mx-auto leading-relaxed">
+                    Xác thực email để hoàn tất đăng ký tài khoản CheckPhish
+                </p>
+            </div>
+        </div>
+    </div>
+
+    Main Content
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-2xl mx-auto">
+            Activation Status Card
+            <div id="activationCard" class="card bg-base-100 shadow-2xl fade-in">
+                <div class="card-body text-center">
+                    Pending State
+                    <div id="pendingState">
+                        <div class="mb-6">
+                            <i class="fas fa-hourglass-half text-6xl text-warning pulse-icon"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold mb-4">Đang xử lý kích hoạt...</h2>
+                        <p class="text-base-content/70 mb-6">
+                            Vui lòng đợi trong giây lát, chúng tôi đang xác thực email của bạn.
+                        </p>
+                        <div class="flex justify-center">
+                            <span class="loading loading-spinner loading-lg text-primary"></span>
+                        </div>
+                    </div>
+
+                    Success State (Hidden by default)
+                    <div id="successState" class="hidden">
+                        <div class="mb-6">
+                            <i class="fas fa-check-circle text-6xl text-success success-checkmark"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold mb-4 text-success">Kích hoạt thành công!</h2>
+                        <p class="text-base-content/70 mb-6">
+                            Tài khoản của bạn đã được kích hoạt. Bạn có thể bắt đầu sử dụng CheckPhish ngay bây giờ.
+                        </p>
+
+                        User Info
+                        <div class="alert alert-success mb-6">
+                            <div class="flex items-center gap-4">
+                                <div class="avatar">
+                                    <div
+                                        class="w-16 h-16 rounded-full ring ring-success ring-offset-base-100 ring-offset-2">
+                                        {% if user.socialaccount_set.all.0.get_avatar_url %}
+                                        <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}"
+                                            alt="{{ user.get_full_name|default:user.username }}">
+                                        {% else %}
+                                        <div
+                                            class="w-full h-full bg-gradient-to-br from-success to-primary flex items-center justify-center text-white font-bold text-xl">
+                                            {{ user.get_full_name|default:user.username|slice:":2"|upper|default:"U" }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="text-left">
+                                    <h3 class="font-bold text-lg">{{ user.get_full_name|default:user.username }}</h3>
+                                    <p class="text-sm">{{ user.email }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        Benefits
+                        <div class="grid md:grid-cols-3 gap-4 mb-8">
+                            <div class="p-4 bg-primary/10 rounded-lg">
+                                <i class="fas fa-shield-alt text-3xl text-primary mb-2"></i>
+                                <h4 class="font-bold">Bảo vệ toàn diện</h4>
+                                <p class="text-sm text-base-content/70">Quét URL & Email</p>
+                            </div>
+                            <div class="p-4 bg-success/10 rounded-lg">
+                                <i class="fas fa-chart-line text-3xl text-success mb-2"></i>
+                                <h4 class="font-bold">Theo dõi</h4>
+                                <p class="text-sm text-base-content/70">Lịch sử chi tiết</p>
+                            </div>
+                            <div class="p-4 bg-warning/10 rounded-lg">
+                                <i class="fas fa-bell text-3xl text-warning mb-2"></i>
+                                <h4 class="font-bold">Cảnh báo</h4>
+                                <p class="text-sm text-base-content/70">Thông báo real-time</p>
+                            </div>
+                        </div>
+
+                        Action Buttons
+                        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                            <a href="home.html" class="btn btn-primary btn-lg gap-2">
+                                <i class="fas fa-home"></i>
+                                Về trang chủ
+                            </a>
+                            <a href="url-scanner.html" class="btn btn-success btn-lg gap-2">
+                                <i class="fas fa-search"></i>
+                                Bắt đầu quét
+                            </a>
+                            <a href="profile.html" class="btn btn-outline btn-lg gap-2">
+                                <i class="fas fa-user"></i>
+                                Xem hồ sơ
+                            </a>
+                        </div>
+                    </div>
+
+                    Error State (Hidden by default)
+                    <div id="errorState" class="hidden">
+                        <div class="mb-6">
+                            <i class="fas fa-times-circle text-6xl text-error"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold mb-4 text-error">Kích hoạt thất bại</h2>
+                        <p class="text-base-content/70 mb-6">
+                            Liên kết kích hoạt không hợp lệ hoặc đã hết hạn. Vui lòng thử lại.
+                        </p>
+
+                        Error Details
+                        <div class="alert alert-error mb-6">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div class="text-left">
+                                <h4 class="font-bold">Lỗi xác thực</h4>
+                                <p class="text-sm">Mã kích hoạt không hợp lệ hoặc đã được sử dụng</p>
+                            </div>
+                        </div>
+
+                        Action Buttons
+                        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                            <button onclick="resendActivation()" class="btn btn-primary gap-2">
+                                <i class="fas fa-envelope"></i>
+                                Gửi lại email kích hoạt
+                            </button>
+                            <a href="contact.html" class="btn btn-outline gap-2">
+                                <i class="fas fa-headset"></i>
+                                Liên hệ hỗ trợ
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            Help Card
+            <div class="card bg-base-100 shadow-xl mt-8 fade-in">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <i class="fas fa-question-circle text-primary mr-2"></i>
+                        Cần trợ giúp?
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="collapse collapse-arrow bg-base-200">
+                            <input type="radio" name="faq-accordion" checked="checked" />
+                            <div class="collapse-title font-medium">
+                                Tôi không nhận được email kích hoạt?
+                            </div>
+                            <div class="collapse-content">
+                                <p>Vui lòng kiểm tra thư mục spam hoặc nhấn nút "Gửi lại email kích hoạt" để nhận email
+                                    mới.</p>
+                            </div>
+                        </div>
+                        <div class="collapse collapse-arrow bg-base-200">
+                            <input type="radio" name="faq-accordion" />
+                            <div class="collapse-title font-medium">
+                                Liên kết kích hoạt có thời hạn bao lâu?
+                            </div>
+                            <div class="collapse-content">
+                                <p>Liên kết kích hoạt có hiệu lực trong 24 giờ kể từ khi được gửi.</p>
+                            </div>
+                        </div>
+                        <div class="collapse collapse-arrow bg-base-200">
+                            <input type="radio" name="faq-accordion" />
+                            <div class="collapse-title font-medium">
+                                Tôi có thể thay đổi email sau khi kích hoạt?
+                            </div>
+                            <div class="collapse-content">
+                                <p>Có, bạn có thể thay đổi email trong phần Cài đặt tài khoản sau khi đăng nhập.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate activation process
+        function activateAccount() {
+            const pendingState = document.getElementById('pendingState');
+            const successState = document.getElementById('successState');
+            const errorState = document.getElementById('errorState');
+
+            // Get activation token from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            // Simulate API call
+            setTimeout(() => {
+                // Simulate success (90% chance) or error (10% chance)
+                const isSuccess = Math.random() > 0.1;
+
+                pendingState.classList.add('hidden');
+
+                if (isSuccess) {
+                    successState.classList.remove('hidden');
+
+                    // Show success toast
+                    const toast = document.createElement('div');
+                    toast.className = 'toast toast-top toast-end';
+                    toast.innerHTML = `
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Chào mừng bạn đến với CheckPhish!</span>
+                            </div>
+                        `;
+                    document.body.appendChild(toast);
+
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                    }, 5000);
+                } else {
+                    errorState.classList.remove('hidden');
+                }
+            }, 2000);
+        }
+
+        // Resend activation email
+        function resendActivation() {
+            const toast = document.createElement('div');
+            toast.className = 'toast toast-top toast-end';
+            toast.innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Đang gửi email kích hoạt...</span>
+                    </div>
+                `;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Email kích hoạt đã được gửi!</span>
+                        </div>
+                    `;
+
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 3000);
+            }, 1500);
+        }
+
+        // Start activation process on page load
+        window.addEventListener('DOMContentLoaded', activateAccount);
+
+        // Smooth animations
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+
+</html>
+
+{% endblock %}

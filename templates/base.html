@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PhishingDetect  - Công cụ kiểm tra và phát hiện trang web lừa đảo, phishing">
+    <title>{% block title %}Dự đoán thu nhập {% endblock %}</title>
+    {% load static %}
+    <!-- Add Tailwind CSS for better styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- DaisyUI CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <!-- Add custom favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'core/favicon.ico' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body class="transition-colors duration-300" data-theme="light">
+    <!-- Header -->
+    <header>
+        <div class="navbar bg-base-100 shadow-md">
+
+            <div class="navbar-start">
+                <a class="btn btn-ghost text-xl font-bold text-primary" href="{% url 'home' %}">
+                    📊 Dự đoán Thu nhập / Thất nghiệp
+                </a>
+            </div>
+
+            <div class="navbar-center hidden lg:flex">
+                <ul class="menu menu-horizontal px-1">
+                    <li><a href="{% url 'home' %}">Trang chủ</a></li>
+                    <li><a href="{% url 'predict' %}">Dự đoán</a></li>
+                    <!-- <li><a href="/statistics/">Thống kê & Phân tích</a></li> -->
+                    <li><a href="{% url 'about' %}">Về dự án</a></li>
+                    <li><a href="{% url 'contact' %}">Liên hệ</a></li>
+                </ul>
+            </div>
+
+            <div class="navbar-end">
+                <a class="btn btn-outline btn-sm lg:btn-md mr-2" href="{% url 'account_login' %}">Đăng nhập</a>
+                <a class="btn btn-primary btn-sm lg:btn-md" href="{% url 'account_signup' %}">Đăng ký</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="body-content">
+        {% block content %}
+        {% endblock %}
+
+        <hr class="border-gray-200 dark:border-gray-700" />
+    </div>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2024 PredictIncome. All rights reserved.</p>
+        </div>
+    </footer>
+    <!-- Scripts -->
+</body>
+
+</html>

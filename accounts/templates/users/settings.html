@@ -1,0 +1,665 @@
+{% extends "base.html" %}
+{% block title %}
+Cài đặt tài khoản
+{% endblock %}
+{% block content %}
+<html>
+
+<head>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .setting-item {
+            transition: all 0.3s ease;
+        }
+
+        .setting-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 0.5rem;
+        }
+
+        /* Added smooth scrolling styles */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+
+        .nav-link.active {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 3px solid #667eea;
+            color: #667eea;
+        }
+
+        .nav-link:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .section-content {
+            scroll-margin-top: 100px;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-base-200">
+    <!-- Hero Section -->
+    <div class="gradient-bg text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center fade-in">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                    <i class="fas fa-cog mr-3"></i>Cài đặt tài khoản
+                </h1>
+                <p class="text-xl max-w-2xl mx-auto leading-relaxed">
+                    Quản lý tùy chọn và cài đặt bảo mật của bạn
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Replaced tabs with sidebar navigation and scrollable content -->
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Sidebar Navigation -->
+                <div class="lg:w-64 flex-shrink-0">
+                    <div class="bg-base-100 rounded-lg shadow-xl p-4 lg:sticky lg:top-24 fade-in">
+                        <h3 class="font-bold text-lg mb-4 px-3">Danh mục</h3>
+                        <nav class="space-y-2">
+                            <a href="#account" class="nav-link active flex items-center gap-3 px-3 py-2 rounded-lg">
+                                <i class="fas fa-user w-5"></i>
+                                <span>Tài khoản</span>
+                            </a>
+                            <a href="#security" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg">
+                                <i class="fas fa-shield-alt w-5"></i>
+                                <span>Bảo mật</span>
+                            </a>
+                            <a href="#notifications" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg">
+                                <i class="fas fa-bell w-5"></i>
+                                <span>Thông báo</span>
+                            </a>
+                            <a href="#privacy" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg">
+                                <i class="fas fa-lock w-5"></i>
+                                <span>Quyền riêng tư</span>
+                            </a>
+                            <a href="#appearance" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg">
+                                <i class="fas fa-palette w-5"></i>
+                                <span>Giao diện</span>
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Main Content - Scrollable Sections -->
+                <div class="flex-1 space-y-8">
+                    <!-- Account Settings Section -->
+                    <section id="account" class="section-content">
+                        <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                            <div class="card-body">
+                                <h2 class="card-title text-2xl mb-6">
+                                    <i class="fas fa-user-circle text-primary mr-2"></i>
+                                    Thông tin tài khoản
+                                </h2>
+
+                                <form class="space-y-6">
+                                    <!-- Profile Picture -->
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">Ảnh đại diện</span>
+                                        </label>
+                                        <div class="flex items-center gap-6">
+                                            <div class="avatar">
+                                                <div
+                                                    class="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                                    {% if user.socialaccount_set.all.0.get_avatar_url %}
+                                                    <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}"
+                                                        alt="{{ user.get_full_name|default:user.username }}">
+                                                    {% else %}
+                                                    <div
+                                                        class="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-2xl">
+                                                        {{
+                                                        user.get_full_name|default:user.username|slice:":2"|upper|default:"U"
+                                                        }}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button type="button" class="btn btn-primary btn-sm gap-2">
+                                                    <i class="fas fa-upload"></i>
+                                                    Tải ảnh lên
+                                                </button>
+                                                <button type="button" class="btn btn-ghost btn-sm gap-2">
+                                                    <i class="fas fa-trash"></i>
+                                                    Xóa
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <!-- Personal Information -->
+                                    <div class="grid md:grid-cols-2 gap-4">
+                                        <div class="form-control">
+                                            <label class="label">
+                                                <span class="label-text font-medium">
+                                                    <i class="fas fa-user mr-1"></i>Họ và tên
+                                                </span>
+                                            </label>
+                                            <input type="text" class="input input-bordered"
+                                                value="{{ user.get_full_name|default:user.username }}" />
+                                        </div>
+                                        <div class="form-control">
+                                            <label class="label">
+                                                <span class="label-text font-medium">
+                                                    <i class="fas fa-id-badge mr-1"></i>Tên người dùng
+                                                </span>
+                                            </label>
+                                            <input type="text" class="input input-bordered"
+                                                value="{{ user.username }}" />
+                                        </div>
+                                    </div>
+
+                                    <div class="grid md:grid-cols-2 gap-4">
+                                        <div class="form-control">
+                                            <label class="label">
+                                                <span class="label-text font-medium">
+                                                    <i class="fas fa-envelope mr-1"></i>Email
+                                                </span>
+                                            </label>
+                                            <input type="email" class="input input-bordered" value="{{ user.email }}" />
+                                            <label class="label">
+                                                <span class="label-text-alt text-success">
+                                                    <i class="fas fa-check-circle"></i> Đã xác thực
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-control">
+                                            <label class="label">
+                                                <span class="label-text font-medium">
+                                                    <i class="fas fa-phone mr-1"></i>Số điện thoại
+                                                </span>
+                                            </label>
+                                            <input type="tel" class="input input-bordered"
+                                                placeholder="+84 123 456 789" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">
+                                                <i class="fas fa-info-circle mr-1"></i>Giới thiệu
+                                            </span>
+                                        </label>
+                                        <textarea class="textarea textarea-bordered h-24"
+                                            placeholder="Viết vài dòng về bản thân..."></textarea>
+                                    </div>
+
+                                    <div class="card-actions justify-end">
+                                        <button type="submit" class="btn btn-primary gap-2">
+                                            <i class="fas fa-save"></i>
+                                            Lưu thay đổi
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Connected Accounts -->
+                        <div class="card bg-base-100 shadow-xl hover-lift fade-in mt-8">
+                            <div class="card-body">
+                                <h2 class="card-title text-2xl mb-6">
+                                    <i class="fas fa-link text-primary mr-2"></i>
+                                    Tài khoản liên kết
+                                </h2>
+
+                                <div class="space-y-4">
+                                    <div class="setting-item p-4 flex items-center justify-between">
+                                        <div class="flex items-center gap-4">
+                                            <div
+                                                class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                                                <i class="fab fa-google text-white text-xl"></i>
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold">Google</h3>
+                                                <p class="text-sm text-base-content/70">
+                                                    {% if user.socialaccount_set.all %}
+                                                    Đã kết nối - {{ user.email }}
+                                                    {% else %}
+                                                    Chưa kết nối
+                                                    {% endif %}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {% if user.socialaccount_set.all %}
+                                        <button class="btn btn-error btn-sm gap-2">
+                                            <i class="fas fa-unlink"></i>
+                                            Ngắt kết nối
+                                        </button>
+                                        {% else %}
+                                        <button class="btn btn-primary btn-sm gap-2">
+                                            <i class="fas fa-link"></i>
+                                            Kết nối
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Security Settings Section -->
+                    <section id="security" class="section-content">
+                        <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                            <div class="card-body">
+                                <h2 class="card-title text-2xl mb-6">
+                                    <i class="fas fa-shield-alt text-primary mr-2"></i>
+                                    Bảo mật tài khoản
+                                </h2>
+
+                                <!-- Change Password -->
+                                <div class="mb-8">
+                                    <h3 class="text-xl font-bold mb-4">Đổi mật khẩu</h3>
+                                    <form class="space-y-4">
+                                        <div class="form-control">
+                                            <label class="label">
+                                                <span class="label-text">Mật khẩu hiện tại</span>
+                                            </label>
+                                            <input type="password" class="input input-bordered" />
+                                        </div>
+                                        <div class="form-control">
+                                            <label class="label">
+                                                <span class="label-text">Mật khẩu mới</span>
+                                            </label>
+                                            <input type="password" class="input input-bordered" />
+                                        </div>
+                                        <div class="form-control">
+                                            <label class="label">
+                                                <span class="label-text">Xác nhận mật khẩu mới</span>
+                                            </label>
+                                            <input type="password" class="input input-bordered" />
+                                        </div>
+                                        <button type="submit" class="btn btn-primary gap-2">
+                                            <i class="fas fa-key"></i>
+                                            Cập nhật mật khẩu
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <!-- Two-Factor Authentication -->
+                                <div class="mb-8">
+                                    <h3 class="text-xl font-bold mb-4">Xác thực hai yếu tố (2FA)</h3>
+                                    <div class="alert alert-info mb-4">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Tăng cường bảo mật tài khoản với xác thực hai yếu tố</span>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label cursor-pointer justify-start gap-4">
+                                            <input type="checkbox" class="toggle toggle-success" checked />
+                                            <div>
+                                                <span class="label-text font-medium">Bật xác thực 2 bước</span>
+                                                <p class="text-sm text-base-content/70">Yêu cầu mã xác thực khi đăng
+                                                    nhập</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <!-- Active Sessions -->
+                                <div>
+                                    <h3 class="text-xl font-bold mb-4">Phiên đăng nhập</h3>
+                                    <div class="space-y-3">
+                                        <div class="alert">
+                                            <div class="flex-1">
+                                                <i class="fas fa-desktop text-xl mr-3"></i>
+                                                <div>
+                                                    <h4 class="font-bold">Windows - Chrome</h4>
+                                                    <p class="text-sm">Hà Nội, Việt Nam - Đang hoạt động</p>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-ghost btn-sm">
+                                                <i class="fas fa-sign-out-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Notifications Settings Section -->
+                    <section id="notifications" class="section-content">
+                        <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                            <div class="card-body">
+                                <h2 class="card-title text-2xl mb-6">
+                                    <i class="fas fa-bell text-primary mr-2"></i>
+                                    Cài đặt thông báo
+                                </h2>
+
+                                <div class="space-y-6">
+                                    <!-- Email Notifications -->
+                                    <div>
+                                        <h3 class="text-xl font-bold mb-4">Thông báo qua Email</h3>
+                                        <div class="space-y-3">
+                                            <div class="form-control">
+                                                <label class="label cursor-pointer justify-start gap-4">
+                                                    <input type="checkbox" class="toggle toggle-primary" checked />
+                                                    <div>
+                                                        <span class="label-text font-medium">Kết quả quét URL</span>
+                                                        <p class="text-sm text-base-content/70">Nhận email khi quét hoàn
+                                                            tất</p>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div class="form-control">
+                                                <label class="label cursor-pointer justify-start gap-4">
+                                                    <input type="checkbox" class="toggle toggle-primary" checked />
+                                                    <div>
+                                                        <span class="label-text font-medium">Cảnh báo bảo mật</span>
+                                                        <p class="text-sm text-base-content/70">Thông báo về mối đe dọa
+                                                            mới</p>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div class="form-control">
+                                                <label class="label cursor-pointer justify-start gap-4">
+                                                    <input type="checkbox" class="toggle toggle-primary" />
+                                                    <div>
+                                                        <span class="label-text font-medium">Bản tin hàng tuần</span>
+                                                        <p class="text-sm text-base-content/70">Tóm tắt hoạt động hàng
+                                                            tuần</p>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <!-- Push Notifications -->
+                                    <div>
+                                        <h3 class="text-xl font-bold mb-4">Thông báo đẩy</h3>
+                                        <div class="space-y-3">
+                                            <div class="form-control">
+                                                <label class="label cursor-pointer justify-start gap-4">
+                                                    <input type="checkbox" class="toggle toggle-success" checked />
+                                                    <div>
+                                                        <span class="label-text font-medium">Thông báo trình
+                                                            duyệt</span>
+                                                        <p class="text-sm text-base-content/70">Nhận thông báo trên
+                                                            trình duyệt</p>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-actions justify-end mt-6">
+                                    <button class="btn btn-primary gap-2">
+                                        <i class="fas fa-save"></i>
+                                        Lưu cài đặt
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Privacy Settings Section -->
+                    <section id="privacy" class="section-content">
+                        <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                            <div class="card-body">
+                                <h2 class="card-title text-2xl mb-6">
+                                    <i class="fas fa-lock text-primary mr-2"></i>
+                                    Quyền riêng tư
+                                </h2>
+
+                                <div class="space-y-6">
+                                    <div class="form-control">
+                                        <label class="label cursor-pointer justify-start gap-4">
+                                            <input type="checkbox" class="toggle toggle-primary" checked />
+                                            <div>
+                                                <span class="label-text font-medium">Hồ sơ công khai</span>
+                                                <p class="text-sm text-base-content/70">Cho phép người khác xem hồ sơ
+                                                    của bạn</p>
+                                            </div>
+                                        </label>
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label cursor-pointer justify-start gap-4">
+                                            <input type="checkbox" class="toggle toggle-primary" />
+                                            <div>
+                                                <span class="label-text font-medium">Hiển thị hoạt động</span>
+                                                <p class="text-sm text-base-content/70">Chia sẻ lịch sử quét với cộng
+                                                    đồng</p>
+                                            </div>
+                                        </label>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <div>
+                                        <h3 class="text-xl font-bold mb-4 text-error">Vùng nguy hiểm</h3>
+                                        <div class="space-y-3">
+                                            <button class="btn btn-outline btn-error w-full justify-start gap-3">
+                                                <i class="fas fa-download"></i>
+                                                Tải xuống dữ liệu của tôi
+                                            </button>
+                                            <button class="btn btn-outline btn-error w-full justify-start gap-3">
+                                                <i class="fas fa-user-slash"></i>
+                                                Vô hiệu hóa tài khoản
+                                            </button>
+                                            <button class="btn btn-error w-full justify-start gap-3">
+                                                <i class="fas fa-trash"></i>
+                                                Xóa tài khoản vĩnh viễn
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Appearance Settings Section -->
+                    <section id="appearance" class="section-content">
+                        <div class="card bg-base-100 shadow-xl hover-lift fade-in">
+                            <div class="card-body">
+                                <h2 class="card-title text-2xl mb-6">
+                                    <i class="fas fa-palette text-primary mr-2"></i>
+                                    Giao diện
+                                </h2>
+
+                                <div class="space-y-6">
+                                    <!-- Theme Selection -->
+                                    <div>
+                                        <h3 class="text-xl font-bold mb-4">Chủ đề</h3>
+                                        <div class="form-control">
+                                            <label class="label cursor-pointer justify-start gap-4">
+                                                <input type="checkbox" class="toggle toggle-primary" id="themeToggle" />
+                                                <div>
+                                                    <span class="label-text font-medium">Chế độ tối</span>
+                                                    <p class="text-sm text-base-content/70">Chuyển sang giao diện tối
+                                                    </p>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <!-- Language
+                                    <div>
+                                        <h3 class="text-xl font-bold mb-4">Ngôn ngữ</h3>
+                                        <select class="select select-bordered w-full max-w-xs">
+                                            <option selected>Tiếng Việt</option>
+                                            <option>English</option>
+                                            <option>中文</option>
+                                            <option>日本語</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="divider"></div> -->
+
+                                    <!-- Font Size -->
+                                    <div>
+                                        <h3 class="text-xl font-bold mb-4">Kích thước chữ</h3>
+                                        <input type="range" min="0" max="2" value="1" class="range range-primary"
+                                            step="1" />
+                                        <div class="w-full flex justify-between text-xs px-2 mt-2">
+                                            <span>Nhỏ</span>
+                                            <span>Trung bình</span>
+                                            <span>Lớn</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-actions justify-end mt-6">
+                                    <button class="btn btn-primary gap-2">
+                                        <i class="fas fa-save"></i>
+                                        Lưu cài đặt
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.section-content');
+        // Update active nav link based on scroll position
+        window.addEventListener('scroll', () => {
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        function showAlert(message, type) {
+            const existingAlert = document.querySelector('.temp-alert');
+            if (existingAlert) existingAlert.remove();
+
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} temp-alert fixed top-4 right-4 w-auto max-w-md z-50 shadow-2xl`;
+            alertDiv.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle"></i>
+                    <span>${message}</span>
+                `;
+
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => {
+                if (alertDiv.parentNode) alertDiv.remove();
+            }, 4000);
+        }
+
+
+        // Form submission handlers
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                showAlert('Cập nhật thành công!', 'success');
+
+            });
+        });
+
+        // Smooth animations
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const themeToggle = document.getElementById('themeToggle');
+
+            // 1. Gán sự kiện cho nút chuyển đổi theme
+            if (themeToggle) {
+                themeToggle.addEventListener('change', function () {
+                    // Gọi hàm chung đã được sửa trong base.html
+                    toggleTheme();
+
+                    // Cập nhật trạng thái check sau khi theme được chuyển
+                    // (Thao tác này thường được tự động hóa nếu bạn dùng một nút/icon đơn giản)
+                    // Nếu dùng checkbox:
+                    const currentTheme = body.getAttribute('data-theme');
+                    if (currentTheme === 'dark') {
+                        themeToggle.checked = true;
+                    }
+                    else {
+                        themeToggle.checked = false;
+                    }
+                });
+
+            }
+        });
+        const currentTheme = body.getAttribute('data-theme');
+        if (currentTheme === 'dark') {
+            themeToggle.checked = false;
+
+        } else {
+            themeToggle.checked = true;
+        }
+
+    </script>
+</body>
+
+</html>
+{% endblock %}
