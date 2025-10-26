@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Thống kê & Phân tích Dữ liệu
+{% endblock %}
+{% block content %}
+
+<div class="container mx-auto p-4 max-w-5xl">
+    <h1 class="text-3xl font-bold mb-6 text-center">Dashboard Thống kê</h1>
+
+    <div class="stats stats-vertical lg:stats-horizontal shadow w-full mb-8">
+
+        <div class="stat">
+            <div class="stat-figure text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    class="inline-block w-8 h-8 stroke-current">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div class="stat-title">Accuracy của Mô hình</div>
+            <div class="stat-value text-primary">{{ model_accuracy }}%</div>
+            <div class="stat-desc">(Logistic Regression)</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-figure text-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    class="inline-block w-8 h-8 stroke-current">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-10v4m0 0a2 2 0 100 4m0-4a2 2 0 110-4m0 4a2 2 0 100 4m0-4a2 2 0 110-4">
+                    </path>
+                </svg>
+            </div>
+            <div class="stat-title">Tổng số dự đoán của bạn</div>
+            <div class="stat-value">{{ total_predictions }}</div>
+            <div class="stat-desc">lần</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-figure text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    class="inline-block w-8 h-8 stroke-current">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18">
+                    </path>
+                </svg>
+            </div>
+            <div class="stat-title">Tỷ lệ dự đoán >50K</div>
+            <div class="stat-value text-accent">{{ positive_rate }}%</div>
+            <div class="stat-desc">trong lịch sử của bạn</div>
+        </div>
+
+    </div>
+
+    <div class="card w-full bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">Phân tích Feature Importance</h2>
+            <p>Biểu đồ này cho thấy các đặc trưng (ví dụ: tuổi, số năm học vấn) ảnh hưởng mạnh nhất đến kết quả dự đoán
+                thu nhập.</p>
+            <figure class="mt-4 p-4 border rounded-lg bg-gray-50">
+                <img src="{% static chart_path %}" alt="Biểu đồ Feature Importance" class="rounded-lg" />
+            </figure>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -84,9 +84,38 @@ Dự đoán Thu nhập
                 <p class="loading loading-spinner text-info" id="loading" style="display:none;"></p>
                 <p id="result" class="text-2xl font-extrabold text-success">---</p>
             </div>
+            <div class="flex flex-col items-center space-y-4">
+                <div id="gauge-chart" class="radial-progress text-primary"
+                    style="--value:0; --size:6rem; --thickness: 0.8rem;">
+                    <span id="gauge-text" class="text-2xl font-bold">0%</span>
+                </div>
+
+                <p id="result" class="text-lg font-medium max-w-md">---</p>
+            </div>
         </div>
     </div>
     <script>
+        // Hàm cập nhật Đồng hồ đo (Gauge) với Daisy UI
+        function updateGauge(probability) {
+            const gauge = document.getElementById('gauge-chart');
+            const gaugeText = document.getElementById('gauge-text');
+
+            // Cập nhật giá trị và màu sắc
+            gauge.style.setProperty('--value', probability);
+            gaugeText.innerText = `${probability}%`;
+
+            // Tùy chỉnh màu theo xác suất (>70% là thành công/an toàn)
+            if (probability >= 70) {
+                gauge.classList.add('text-success');
+                gauge.classList.remove('text-warning', 'text-error');
+            } else if (probability >= 50) {
+                gauge.classList.add('text-warning');
+                gauge.classList.remove('text-success', 'text-error');
+            } else {
+                gauge.classList.add('text-error');
+                gauge.classList.remove('text-success', 'text-warning');
+            }
+        }
         document.getElementById('income-form').addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -122,9 +151,20 @@ Dự đoán Thu nhập
                 .then(response => response.json())
                 .then(data => {
                     // 3. Hiển thị kết quả
+                    const resultEl = document.getElementById('result'); // Phần tử hiển thị kết quả
+                    const probEl = document.getElementById('probability-display'); // Phần tử hiển thị xác suất
+
                     loadingEl.style.display = 'none';
+
                     if (data.prediction) {
-                        resultEl.innerText = `Thu nhập: ${data.prediction}`;
+                        // 1. Cập nhật đoạn văn bản
+                        resultEl.innerHTML = `Dự đoán thu nhập của cá nhân này là <strong>${data.prediction}</strong> (với xác suất <strong>${data.probability}%</strong>).`;
+                        console.log(resultEl.innerHTML);
+                        console.log("Dữ liệu gốc nhận được:", data);
+                        // 2. Cập nhật Đồng hồ đo (dùng Daisy UI)
+                        // Gọi hàm cập nhật Gauge (sẽ được định nghĩa trong HTML)
+                        updateGauge(data.probability);
+
                     } else {
                         resultEl.innerText = `Lỗi: ${data.error}`;
                     }
