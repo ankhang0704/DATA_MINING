@@ -14,3 +14,15 @@ class PredictionHistory(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.output_result} ({self.probability}%)'
+    
+class UnemploymentHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='unemployment_predictions')
+    input_data = models.JSONField() # Lưu trữ input dưới dạng JSON
+    output_result = models.CharField(max_length=20) # Thất nghiệp hoặc Có việc làm
+    probability = models.FloatField() # Xác suất
+    prediction_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.output_result} ({self.probability}%)'
+    class Meta:
+        ordering = ['-prediction_date']

@@ -2,180 +2,364 @@
 {% block title %}
 Dự đoán Thu nhập
 {% endblock %}
+
 {% block content %}
+<div class="min-h-screen py-12 px-4" style="background: linear-gradient(135deg, #f5f7fa 0%, #e8ebf2 100%);">
+    <div class="max-w-4xl mx-auto">
 
-
-<body>
-    <div class="card w-full max-w-xl mx-auto my-10 bg-base-100 shadow-xl p-6 md:p-10">
-
-        <div class="card-body p-0">
-            <h1 class="text-3xl font-bold text-center text-primary mb-2">
-                📊 Trang web Dự đoán Thu nhập
+        <!-- Header Section -->
+        <div class="text-center mb-12" style="animation: fadeIn 0.8s ease-out;">
+            <h1 class="text-5xl font-extrabold mb-4">
+                <span
+                    style="background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text; animation: gradient 3s linear infinite;">
+                    Dự Đoán Thu Nhập
+                </span>
             </h1>
-            <p class="text-center text-base-content/80 mb-6">
-                Nhập thông tin nhân khẩu học để dự đoán thu nhập (trên hoặc dưới $50K/năm).
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Nhập thông tin nhân khẩu học để dự đoán thu nhập của bạn có trên hay dưới <span class="font-bold"
+                    style="color: #764ba2;">$50K/năm</span>
             </p>
         </div>
+        <div class="space-y-8">
+            <a href="{% url 'unemployment' %}"
+                class="inline-block mb-6 px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-700 transition-all"
+                style="box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+                <i class="fas fa-user-times"></i>
+                Chuyển đến Dự đoán Thất nghiệp
+            </a>
+        </div>
+        <!-- Main Card -->
+        <div class="bg-white rounded-2xl shadow-2xl" style="transition: transform 0.3s ease, box-shadow 0.3s ease;">
+            <div class="p-8 md:p-12">
 
-        <form id="income-form" class="space-y-4">
+                <form id="income-form" class="space-y-6">
 
-            <label class="form-control w-full">
-                <div class="label"><span class="label-text">Tuổi (Age):</span></div>
-                <input type="number" id="age" name="age" value="30" required class="input input-bordered w-full"
-                    placeholder="Ví dụ: 30" />
-            </label>
+                    <!-- Grid Layout for Form Fields -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-            <label class="form-control w-full">
-                <div class="label"><span class="label-text">Loại hình Công việc (Workclass):</span></div>
-                <select id="workclass" name="workclass" class="select select-bordered w-full">
-                    <option value="Private">Tư nhân (Private)</option>
-                    <option value="Self-emp-not-inc">Tự kinh doanh (Self-emp-not-inc)</option>
-                    <option value="Local-gov">Chính phủ địa phương (Local-gov)</option>
-                    <option value="State-gov">Chính phủ tiểu bang (State-gov)</option>
-                    <option value="Federal-gov">Chính phủ liên bang (Federal-gov)</option>
-                    <option value="Self-emp-inc">Tự kinh doanh (có đăng ký)</option>
-                    <option value="Without-pay">Không lương</option>
-                </select>
-            </label>
+                        <!-- Age -->
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-birthday-cake" style="color: #667eea;"></i>
+                                    Tuổi (Age)
+                                </span>
+                            </label>
+                            <input type="number" id="age" name="age" value="30" required min="16" max="100"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all"
+                                placeholder="Ví dụ: 30" />
+                            <p class="text-xs text-gray-500 mt-1">Độ tuổi từ 16-100</p>
+                        </div>
 
-            <label class="form-control w-full">
-                <div class="label"><span class="label-text">Số năm Học vấn (Education-num):</span></div>
-                <input type="number" id="education-num" name="education-num" value="13" required
-                    class="input input-bordered w-full" placeholder="Ví dụ: 13 (Cử nhân)" />
-            </label>
+                        <!-- Workclass -->
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-briefcase" style="color: #667eea;"></i>
+                                    Loại hình Công việc
+                                </span>
+                            </label>
+                            <select id="workclass" name="workclass"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all">
+                                <option value="Private">🏢 Tư nhân (Private)</option>
+                                <option value="Self-emp-not-inc">💼 Tự kinh doanh</option>
+                                <option value="Local-gov">🏛️ Chính phủ địa phương</option>
+                                <option value="State-gov">🏛️ Chính phủ tiểu bang</option>
+                                <option value="Federal-gov">🏛️ Chính phủ liên bang</option>
+                                <option value="Self-emp-inc">💼 Tự kinh doanh (đăng ký)</option>
+                                <option value="Without-pay">❌ Không lương</option>
+                            </select>
+                        </div>
 
-            <label class="form-control w-full">
-                <div class="label"><span class="label-text">Tình trạng Hôn nhân (Marital-status):</span></div>
-                <select id="marital-status" name="marital-status" class="select select-bordered w-full">
-                    <option value="Married-civ-spouse">Đã kết hôn (vợ/chồng dân sự)</option>
-                    <option value="Never-married">Chưa kết hôn</option>
-                    <option value="Divorced">Đã ly hôn</option>
-                    <option value="Separated">Ly thân</option>
-                    <option value="Widowed">Góa</option>
-                </select>
-            </label>
+                        <!-- Education Number -->
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-graduation-cap" style="color: #667eea;"></i>
+                                    Số năm Học vấn
+                                </span>
+                            </label>
+                            <input type="number" id="education-num" name="education-num" value="13" required min="1"
+                                max="20"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all"
+                                placeholder="Ví dụ: 13 (Cử nhân)" />
+                            <p class="text-xs text-gray-500 mt-1">13 = Cử nhân, 16 = Tiến sĩ</p>
+                        </div>
 
-            <label class="form-control w-full">
-                <div class="label"><span class="label-text">Số giờ làm mỗi tuần (Hours-per-week):</span></div>
-                <input type="number" id="hours-per-week" name="hours-per-week" value="40" required
-                    class="input input-bordered w-full" placeholder="Ví dụ: 40" />
-            </label>
+                        <!-- Marital Status -->
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-ring" style="color: #667eea;"></i>
+                                    Tình trạng Hôn nhân
+                                </span>
+                            </label>
+                            <select id="marital-status" name="marital-status"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all">
+                                <option value="Married-civ-spouse">💑 Đã kết hôn</option>
+                                <option value="Never-married">🙍 Chưa kết hôn</option>
+                                <option value="Divorced">💔 Đã ly hôn</option>
+                                <option value="Separated">🚶 Ly thân</option>
+                                <option value="Widowed">🖤 Góa</option>
+                            </select>
+                        </div>
 
-            <label class="form-control w-full">
-                <div class="label"><span class="label-text">Lợi nhuận vốn (Capital-gain):</span></div>
-                <input type="number" id="capital-gain" name="capital-gain" value="0" required
-                    class="input input-bordered w-full" placeholder="Ví dụ: 0 hoặc 2174" />
-            </label>
+                        <!-- Hours per Week -->
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-clock" style="color: #667eea;"></i>
+                                    Giờ làm việc/tuần
+                                </span>
+                            </label>
+                            <input type="number" id="hours-per-week" name="hours-per-week" value="40" required min="1"
+                                max="100"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all"
+                                placeholder="Ví dụ: 40" />
+                            <p class="text-xs text-gray-500 mt-1">Số giờ làm việc mỗi tuần</p>
+                        </div>
 
-            <label class="form-control w-full">
-                <div class="label"><span class="label-text">Tổn thất vốn (Capital-loss):</span></div>
-                <input type="number" id="capital-loss" name="capital-loss" value="0" required
-                    class="input input-bordered w-full" placeholder="Ví dụ: 0" />
-            </label>
+                        <!-- Capital Gain -->
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-chart-line text-green-600"></i>
+                                    Lợi nhuận vốn
+                                </span>
+                            </label>
+                            <input type="number" id="capital-gain" name="capital-gain" value="0" required min="0"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all"
+                                placeholder="Ví dụ: 0 hoặc 2174" />
+                            <p class="text-xs text-gray-500 mt-1">Thu nhập từ đầu tư</p>
+                        </div>
 
-            <button type="submit" class="btn btn-primary w-full mt-6">
-                Dự đoán Thu nhập
-            </button>
-        </form>
+                        <!-- Capital Loss -->
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-chart-line text-red-600"></i>
+                                    Tổn thất vốn
+                                </span>
+                            </label>
+                            <input type="number" id="capital-loss" name="capital-loss" value="0" required min="0"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all"
+                                placeholder="Ví dụ: 0" />
+                            <p class="text-xs text-gray-500 mt-1">Tổn thất từ đầu tư</p>
+                        </div>
 
-        <div id="result-container" class="mt-8 pt-4 border-t border-base-200 text-center">
-            <h2 class="text-xl font-semibold mb-2">Kết quả Dự đoán:</h2>
-            <div role="alert" class="alert shadow-lg justify-center p-4">
-                <p class="loading loading-spinner text-info" id="loading" style="display:none;"></p>
-                <p id="result" class="text-2xl font-extrabold text-success">---</p>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-6">
+                        <button type="submit"
+                            class="w-full py-4 px-6 text-white text-lg font-semibold rounded-lg shadow-lg border-none transition-all"
+                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); transition: opacity 0.3s ease, transform 0.3s ease;"
+                            onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)';"
+                            onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)';">
+                            <i class="fas fa-magic"></i>
+                            Dự đoán Thu nhập ngay
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+
             </div>
-            <div class="flex flex-col items-center space-y-4">
-                <div id="gauge-chart" class="radial-progress text-primary"
-                    style="--value:0; --size:6rem; --thickness: 0.8rem;">
-                    <span id="gauge-text" class="text-2xl font-bold">0%</span>
+        </div>
+
+        <!-- Result Section -->
+        <div id="result-container" class="mt-8 bg-white rounded-2xl shadow-2xl"
+            style="display:none; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+            <div class="p-8 md:p-12">
+
+                <h2 class="text-3xl font-bold text-center mb-8"
+                    style="background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text;">
+                    <i class="fas fa-chart-pie"></i> Kết quả Dự đoán
+                </h2>
+
+                <!-- Loading State -->
+                <div id="loading" class="text-center py-12" style="display:none;">
+                    <div
+                        class="inline-block w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin">
+                    </div>
+                    <p class="mt-4 text-lg text-gray-600">Đang phân tích dữ liệu...</p>
                 </div>
 
-                <p id="result" class="text-lg font-medium max-w-md">---</p>
+                <!-- Result Content -->
+                <div id="result-content" class="hidden">
+                    <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
+
+                        <!-- Gauge Chart -->
+                        <div class="text-center">
+                            <div class="relative inline-flex items-center justify-center"
+                                style="width: 12rem; height: 12rem;">
+                                <svg class="transform -rotate-90" style="width: 12rem; height: 12rem;">
+                                    <circle cx="96" cy="96" r="88" stroke="#e5e7eb" stroke-width="16" fill="none">
+                                    </circle>
+                                    <circle id="gauge-circle" cx="96" cy="96" r="88" stroke="#667eea" stroke-width="16"
+                                        fill="none" stroke-dasharray="552.92" stroke-dashoffset="552.92"
+                                        stroke-linecap="round"
+                                        style="transition: stroke-dashoffset 1s ease, stroke 0.5s ease;"></circle>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <div id="gauge-text" class="text-4xl font-bold" style="color: #667eea;">0%</div>
+                                    <div class="text-sm text-gray-500 mt-1">Xác suất</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Result Text -->
+                        <div class="flex-1 text-center lg:text-left">
+                            <div class="p-6 rounded-lg shadow-lg" id="result-alert"
+                                style="transition: all 0.3s ease; background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%);">
+                                <div class="flex items-start gap-4">
+                                    <i class="fas fa-info-circle text-2xl" style="color: #667eea;"></i>
+                                    <div>
+                                        <h3 class="font-bold text-xl mb-2 text-gray-800">Dự đoán của bạn</h3>
+                                        <p id="result" class="text-lg text-gray-700"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="mt-6 flex gap-3 justify-center lg:justify-start">
+                                <button
+                                    onclick="document.getElementById('income-form').reset(); document.getElementById('result-container').style.display='none';"
+                                    class="px-6 py-3 border-2 rounded-lg font-semibold transition-all"
+                                    style="border-color: #667eea; color: #667eea;"
+                                    onmouseover="this.style.backgroundColor='#667eea'; this.style.color='white';"
+                                    onmouseout="this.style.backgroundColor='transparent'; this.style.color='#667eea';">
+                                    <i class="fas fa-redo"></i>
+                                    Dự đoán mới
+                                </button>
+                                <a href="{% url 'history' %}"
+                                    class="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition-all">
+                                    <i class="fas fa-history"></i>
+                                    Xem lịch sử
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
-    <script>
-        // Hàm cập nhật Đồng hồ đo (Gauge) với Daisy UI
-        function updateGauge(probability) {
-            const gauge = document.getElementById('gauge-chart');
-            const gaugeText = document.getElementById('gauge-text');
+</div>
 
-            // Cập nhật giá trị và màu sắc
-            gauge.style.setProperty('--value', probability);
-            gaugeText.innerText = `${probability}%`;
-
-            // Tùy chỉnh màu theo xác suất (>70% là thành công/an toàn)
-            if (probability >= 70) {
-                gauge.classList.add('text-success');
-                gauge.classList.remove('text-warning', 'text-error');
-            } else if (probability >= 50) {
-                gauge.classList.add('text-warning');
-                gauge.classList.remove('text-success', 'text-error');
-            } else {
-                gauge.classList.add('text-error');
-                gauge.classList.remove('text-success', 'text-warning');
-            }
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
         }
-        document.getElementById('income-form').addEventListener('submit', function (e) {
-            e.preventDefault();
 
-            // Hiển thị trạng thái "Đang xử lý"
-            const resultEl = document.getElementById('result');
-            const loadingEl = document.getElementById('loading');
-            resultEl.innerText = '---';
-            loadingEl.style.display = 'block';
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
-            // 1. Thu thập dữ liệu từ các ô input
-            const data = {
-                'age': parseInt(document.getElementById('age').value),
-                'workclass': document.getElementById('workclass').value,
-                'education-num': parseInt(document.getElementById('education-num').value),
-                'marital-status': document.getElementById('marital-status').value,
-                'hours-per-week': parseInt(document.getElementById('hours-per-week').value),
-                'capital-gain': parseInt(document.getElementById('capital-gain').value),
-                'capital-loss': parseInt(document.getElementById('capital-loss').value)
+    @keyframes gradient {
+        0% {
+            background-position: 0% center;
+        }
 
-                // Lưu ý: Chúng ta chỉ cần gửi các cột có trong form.
-                // Backend (app.py) sẽ tự động xử lý các cột còn lại.
-            };
-            // Gửi dữ liệu đến URL API Django
-            fetch('/app/api/predict/', {  // CHỈNH SỬA URL: '/predict/'
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Django cần token CSRF nếu là form truyền thống, 
-                    // nhưng với fetch/JSON, chúng ta dùng @csrf_exempt trong views.py
-                },
-                body: JSON.stringify(data)
+        100% {
+            background-position: 200% center;
+        }
+    }
+
+    input:focus,
+    select:focus {
+        transform: scale(1.01);
+    }
+</style>
+
+<script>
+    function updateGauge(probability) {
+        const gaugeCircle = document.getElementById('gauge-circle');
+        const gaugeText = document.getElementById('gauge-text');
+        const resultAlert = document.getElementById('result-alert');
+
+        const circumference = 552.92;
+        const offset = circumference - (probability / 100) * circumference;
+
+        gaugeCircle.style.strokeDashoffset = offset;
+        gaugeText.innerText = `${probability}%`;
+
+        // Update colors
+        if (probability >= 70) {
+            gaugeCircle.style.stroke = '#10b981';
+            gaugeText.style.color = '#10b981';
+            resultAlert.style.background = 'linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)';
+        } else if (probability >= 50) {
+            gaugeCircle.style.stroke = '#f59e0b';
+            gaugeText.style.color = '#f59e0b';
+            resultAlert.style.background = 'linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%)';
+        } else {
+            gaugeCircle.style.stroke = '#ef4444';
+            gaugeText.style.color = '#ef4444';
+            resultAlert.style.background = 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)';
+        }
+    }
+
+    document.getElementById('income-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const resultContainer = document.getElementById('result-container');
+        const loading = document.getElementById('loading');
+        const resultContent = document.getElementById('result-content');
+
+        resultContainer.style.display = 'block';
+        loading.style.display = 'block';
+        resultContent.classList.add('hidden');
+
+        setTimeout(() => {
+            resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+
+        const data = {
+            'age': parseInt(document.getElementById('age').value),
+            'workclass': document.getElementById('workclass').value,
+            'education-num': parseInt(document.getElementById('education-num').value),
+            'marital-status': document.getElementById('marital-status').value,
+            'hours-per-week': parseInt(document.getElementById('hours-per-week').value),
+            'capital-gain': parseInt(document.getElementById('capital-gain').value),
+            'capital-loss': parseInt(document.getElementById('capital-loss').value)
+        };
+
+        fetch('/app/api/predict/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                resultContent.classList.remove('hidden');
+
+                if (data.prediction) {
+                    const resultEl = document.getElementById('result');
+                    const incomeText = data.prediction === '>50K'
+                        ? '<strong style="color: #10b981;">trên $50K/năm</strong>'
+                        : '<strong style="color: #f59e0b;">dưới $50K/năm</strong>';
+
+                    resultEl.innerHTML = `Thu nhập dự đoán của bạn là ${incomeText} với độ tin cậy <strong>${data.probability}%</strong>`;
+
+                    updateGauge(data.probability);
+                } else {
+                    document.getElementById('result').innerText = `Lỗi: ${data.error}`;
+                }
             })
-                .then(response => response.json())
-                .then(data => {
-                    // 3. Hiển thị kết quả
-                    const resultEl = document.getElementById('result'); // Phần tử hiển thị kết quả
-                    const probEl = document.getElementById('probability-display'); // Phần tử hiển thị xác suất
-
-                    loadingEl.style.display = 'none';
-
-                    if (data.prediction) {
-                        // 1. Cập nhật đoạn văn bản
-                        resultEl.innerHTML = `Dự đoán thu nhập của cá nhân này là <strong>${data.prediction}</strong> (với xác suất <strong>${data.probability}%</strong>).`;
-                        console.log(resultEl.innerHTML);
-                        console.log("Dữ liệu gốc nhận được:", data);
-                        // 2. Cập nhật Đồng hồ đo (dùng Daisy UI)
-                        // Gọi hàm cập nhật Gauge (sẽ được định nghĩa trong HTML)
-                        updateGauge(data.probability);
-
-                    } else {
-                        resultEl.innerText = `Lỗi: ${data.error}`;
-                    }
-                })
-                .catch(error => {
-                    // 4. Xử lý nếu có lỗi
-                    loadingEl.style.display = 'none';
-                    console.error('Error:', error);
-                    resultEl.innerText = 'Đã xảy ra lỗi khi kết nối server.';
-                });
-        });
-    </script>
-</body>
+            .catch(error => {
+                loading.style.display = 'none';
+                resultContent.classList.remove('hidden');
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = '<span style="color: #ef4444;">Đã xảy ra lỗi khi kết nối server. Vui lòng thử lại!</span>';
+            });
+    });
+</script>
 {% endblock %}

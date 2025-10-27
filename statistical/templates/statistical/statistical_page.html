@@ -5,62 +5,420 @@ Thống kê & Phân tích Dữ liệu
 {% endblock %}
 {% block content %}
 
-<div class="container mx-auto p-4 max-w-5xl">
-    <h1 class="text-3xl font-bold mb-6 text-center">Dashboard Thống kê</h1>
+<div class="min-h-screen py-12 px-4" style="background: linear-gradient(135deg, #f5f7fa 0%, #e8ebf2 100%);">
+    <div class="max-w-7xl mx-auto">
 
-    <div class="stats stats-vertical lg:stats-horizontal shadow w-full mb-8">
-
-        <div class="stat">
-            <div class="stat-figure text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    class="inline-block w-8 h-8 stroke-current">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-            </div>
-            <div class="stat-title">Accuracy của Mô hình</div>
-            <div class="stat-value text-primary">{{ model_accuracy }}%</div>
-            <div class="stat-desc">(Logistic Regression)</div>
+        <!-- Header -->
+        <div class="text-center mb-12" style="animation: fadeIn 0.8s ease-out;">
+            <h1 class="text-5xl font-extrabold mb-4">
+                <span
+                    style="background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text; animation: gradient 3s linear infinite;">
+                    Dashboard Thống kê
+                </span>
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Phân tích dữ liệu và hiệu suất mô hình dự đoán thu nhập/thất nghiệp.
+            </p>
         </div>
 
-        <div class="stat">
-            <div class="stat-figure text-secondary">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    class="inline-block w-8 h-8 stroke-current">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-10v4m0 0a2 2 0 100 4m0-4a2 2 0 110-4m0 4a2 2 0 100 4m0-4a2 2 0 110-4">
-                    </path>
-                </svg>
+        <!-- Stats Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+
+            <!-- Card 1: Model Accuracy -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all"
+                style="transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                onmouseover="this.style.transform='translateY(-5px)';"
+                onmouseout="this.style.transform='translateY(0)';">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-4 rounded-full"
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-brain text-2xl text-white"></i>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500 mb-1">Accuracy của Mô hình</p>
+                        <p class="text-4xl font-bold" style="color: #667eea;">{{ model_accuracy }}%</p>
+                    </div>
+                </div>
+                <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full transition-all duration-1000"
+                        style="width: {{ model_accuracy }}%; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3 text-center">(Logistic Regression Model)</p>
             </div>
-            <div class="stat-title">Tổng số dự đoán của bạn</div>
-            <div class="stat-value">{{ total_predictions }}</div>
-            <div class="stat-desc">lần</div>
+
+            <!-- Card 2: Total Predictions -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all"
+                style="transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                onmouseover="this.style.transform='translateY(-5px)';"
+                onmouseout="this.style.transform='translateY(0)';">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-4 rounded-full"
+                        style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);">
+                        <i class="fas fa-chart-line text-2xl text-white"></i>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500 mb-1">Tổng số Dự đoán</p>
+                        <p class="text-4xl font-bold" style="color: #f59e0b;">{{ total_predictions }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between mt-4">
+                    <span class="text-xs text-gray-500">Lượt dự đoán của bạn</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold"
+                        style="background-color: #fef3c7; color: #92400e;">
+                        <i class="fas fa-history mr-1"></i> Lịch sử
+                    </span>
+                </div>
+            </div>
+
+            <!-- Card 3: Positive Rate -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all"
+                style="transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                onmouseover="this.style.transform='translateY(-5px)';"
+                onmouseout="this.style.transform='translateY(0)';">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-4 rounded-full"
+                        style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <i class="fas fa-arrow-trend-up text-2xl text-white"></i>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500 mb-1">Tỷ lệ >50K</p>
+                        <p class="text-4xl font-bold" style="color: #10b981;">{{ positive_rate }}%</p>
+                    </div>
+                </div>
+                <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 rounded-full transition-all duration-1000"
+                        style="width: {{ positive_rate }}%;"></div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3 text-center">Trong lịch sử của bạn</p>
+            </div>
         </div>
 
-        <div class="stat">
-            <div class="stat-figure text-accent">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    class="inline-block w-8 h-8 stroke-current">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18">
-                    </path>
-                </svg>
+        <!-- Feature Importance Chart -->
+        <div class="bg-white gap-6 mb-12 rounded-2xl shadow-xl overflow-hidden"
+            style="transition: transform 0.3s ease, box-shadow 0.3s ease;">
+            <div class="p-8 md:p-12">
+
+                <!-- Chart Header -->
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-2" style="color: #1f2937;">
+                            <i class="fas fa-chart-bar mr-2" style="color: #667eea;"></i>
+                            Phân tích Feature Importance
+                        </h2>
+                        <p class="text-gray-600">
+                            Biểu đồ này cho thấy các đặc trưng (ví dụ: tuổi, số năm học vấn) ảnh hưởng mạnh nhất đến kết
+                            quả dự đoán thu nhập.
+                        </p>
+                    </div>
+                    <div class="hidden md:block p-4 rounded-full"
+                        style="background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%);">
+                        <i class="fas fa-magnifying-glass-chart text-3xl" style="color: #667eea;"></i>
+                    </div>
+                </div>
+
+                <!-- Info Alert -->
+                <div class="mb-6 p-4 rounded-lg"
+                    style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left: 4px solid #f59e0b;">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-lightbulb text-xl" style="color: #f59e0b;"></i>
+                        <div>
+                            <p class="font-semibold text-gray-800 mb-1">💡 Insights</p>
+                            <p class="text-sm text-gray-700">
+                                Feature Importance giúp bạn hiểu yếu tố nào quan trọng nhất trong việc quyết định mức
+                                thu nhập.
+                                Các thanh dài hơn biểu thị tầm quan trọng cao hơn.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Container -->
+                <div class="p-6 rounded-xl"
+                    style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border: 2px solid #e5e7eb;">
+                    <figure class="flex justify-center">
+                        <img src="{% static chart_path %}" alt="Biểu đồ Feature Importance"
+                            class="rounded-lg shadow-lg max-w-full h-auto" style="transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)';"
+                            onmouseout="this.style.transform='scale(1)';" />
+                    </figure>
+                </div>
+
+                <!-- Legend -->
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="flex items-center gap-3 p-4 rounded-lg"
+                        style="background-color: #f0fdf4; border-left: 4px solid #10b981;">
+                        <i class="fas fa-circle-check text-xl" style="color: #10b981;"></i>
+                        <div>
+                            <p class="text-xs text-gray-500">Importance cao</p>
+                            <p class="text-sm font-semibold text-gray-800">Ảnh hưởng mạnh</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 rounded-lg"
+                        style="background-color: #fef3c7; border-left: 4px solid #f59e0b;">
+                        <i class="fas fa-circle-half-stroke text-xl" style="color: #f59e0b;"></i>
+                        <div>
+                            <p class="text-xs text-gray-500">Importance trung bình</p>
+                            <p class="text-sm font-semibold text-gray-800">Ảnh hưởng vừa</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 rounded-lg"
+                        style="background-color: #fee2e2; border-left: 4px solid #ef4444;">
+                        <i class="fas fa-circle-xmark text-xl" style="color: #ef4444;"></i>
+                        <div>
+                            <p class="text-xs text-gray-500">Importance thấp</p>
+                            <p class="text-sm font-semibold text-gray-800">Ảnh hưởng yếu</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="stat-title">Tỷ lệ dự đoán >50K</div>
-            <div class="stat-value text-accent">{{ positive_rate }}%</div>
-            <div class="stat-desc">trong lịch sử của bạn</div>
+
+        </div>
+        <!-- Stats Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+
+            <!-- Card 1: Model Accuracy -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all"
+                style="transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                onmouseover="this.style.transform='translateY(-5px)';"
+                onmouseout="this.style.transform='translateY(0)';">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-4 rounded-full"
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-brain text-2xl text-white"></i>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500 mb-1">Accuracy của Mô hình</p>
+                        <p class="text-4xl font-bold" style="color: #667eea;">{{ model_accuracy_unemployment }}%</p>
+                    </div>
+                </div>
+                <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full transition-all duration-1000"
+                        style="width: {{ model_accuracy_unemployment }}%; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3 text-center">(Logistic Regression Model)</p>
+            </div>
+
+            <!-- Card 2: Total Predictions -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all"
+                style="transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                onmouseover="this.style.transform='translateY(-5px)';"
+                onmouseout="this.style.transform='translateY(0)';">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-4 rounded-full"
+                        style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);">
+                        <i class="fas fa-chart-line text-2xl text-white"></i>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500 mb-1">Tổng số Dự đoán</p>
+                        <p class="text-4xl font-bold" style="color: #f59e0b;">{{ total_unemployment_predictions }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between mt-4">
+                    <span class="text-xs text-gray-500">Lượt dự đoán của bạn</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold"
+                        style="background-color: #fef3c7; color: #92400e;">
+                        <i class="fas fa-history mr-1"></i> Lịch sử
+                    </span>
+                </div>
+            </div>
+
+            <!-- Card 3: Positive Rate -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all"
+                style="transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                onmouseover="this.style.transform='translateY(-5px)';"
+                onmouseout="this.style.transform='translateY(0)';">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-4 rounded-full"
+                        style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <i class="fas fa-arrow-trend-up text-2xl text-white"></i>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500 mb-1">Tỷ lệ thất nghiệp</p>
+                        <p class="text-4xl font-bold" style="color: #10b981;">{{ unemployed_rate }}%</p>
+                    </div>
+                </div>
+                <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 rounded-full transition-all duration-1000"
+                        style="width: {{ positive_rate }}%;">
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3 text-center">Trong lịch sử của bạn</p>
+            </div>
         </div>
 
-    </div>
+        <!-- Feature Importance Chart -->
+        <div class="bg-white gap-6 mb-12 rounded-2xl shadow-xl overflow-hidden"
+            style="transition: transform 0.3s ease, box-shadow 0.3s ease;">
+            <div class="p-8 md:p-12">
 
-    <div class="card w-full bg-base-100 shadow-xl">
-        <div class="card-body">
-            <h2 class="card-title">Phân tích Feature Importance</h2>
-            <p>Biểu đồ này cho thấy các đặc trưng (ví dụ: tuổi, số năm học vấn) ảnh hưởng mạnh nhất đến kết quả dự đoán
-                thu nhập.</p>
-            <figure class="mt-4 p-4 border rounded-lg bg-gray-50">
-                <img src="{% static chart_path %}" alt="Biểu đồ Feature Importance" class="rounded-lg" />
-            </figure>
+                <!-- Chart Header -->
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-2" style="color: #1f2937;">
+                            <i class="fas fa-chart-bar mr-2" style="color: #667eea;"></i>
+                            Phân tích Feature Importance
+                        </h2>
+                        <p class="text-gray-600">
+                            Biểu đồ này cho thấy các đặc trưng (ví dụ: tuổi, số năm học vấn) ảnh hưởng mạnh nhất đến kết
+                            quả dự đoán thu nhập.
+                        </p>
+                    </div>
+                    <div class="hidden md:block p-4 rounded-full"
+                        style="background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%);">
+                        <i class="fas fa-magnifying-glass-chart text-3xl" style="color: #667eea;"></i>
+                    </div>
+                </div>
+
+                <!-- Info Alert -->
+                <div class="mb-6 p-4 rounded-lg"
+                    style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left: 4px solid #f59e0b;">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-lightbulb text-xl" style="color: #f59e0b;"></i>
+                        <div>
+                            <p class="font-semibold text-gray-800 mb-1">💡 Insights</p>
+                            <p class="text-sm text-gray-700">
+                                Feature Importance giúp bạn hiểu yếu tố nào quan trọng nhất trong việc quyết định mức
+                                thu nhập.
+                                Các thanh dài hơn biểu thị tầm quan trọng cao hơn.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Container -->
+                <div class="p-6 rounded-xl"
+                    style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border: 2px solid #e5e7eb;">
+                    <figure class="flex justify-center">
+                        <img src="{% static chart_path_unemployment %}" alt="Biểu đồ Feature Importance"
+                            class="rounded-lg shadow-lg max-w-full h-auto" style="transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)';"
+                            onmouseout="this.style.transform='scale(1)';" />
+                    </figure>
+                </div>
+
+                <!-- Legend -->
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="flex items-center gap-3 p-4 rounded-lg"
+                        style="background-color: #f0fdf4; border-left: 4px solid #10b981;">
+                        <i class="fas fa-circle-check text-xl" style="color: #10b981;"></i>
+                        <div>
+                            <p class="text-xs text-gray-500">Importance cao</p>
+                            <p class="text-sm font-semibold text-gray-800">Ảnh hưởng mạnh</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 rounded-lg"
+                        style="background-color: #fef3c7; border-left: 4px solid #f59e0b;">
+                        <i class="fas fa-circle-half-stroke text-xl" style="color: #f59e0b;"></i>
+                        <div>
+                            <p class="text-xs text-gray-500">Importance trung bình</p>
+                            <p class="text-sm font-semibold text-gray-800">Ảnh hưởng vừa</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 rounded-lg"
+                        style="background-color: #fee2e2; border-left: 4px solid #ef4444;">
+                        <i class="fas fa-circle-xmark text-xl" style="color: #ef4444;"></i>
+                        <div>
+                            <p class="text-xs text-gray-500">Importance thấp</p>
+                            <p class="text-sm font-semibold text-gray-800">Ảnh hưởng yếu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% if has_history %}
+        <div class="card w-full bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Phân tích Thói quen Nhập liệu của Bạn</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+
+                    <div>
+                        <h3 class="font-semibold mb-2">Nghề nghiệp Nhập nhiều nhất:</h3>
+                        {% if top_occupations %}
+                        <ul class="list-disc list-inside space-y-1 text-sm">
+                            {% for occupation, count in top_occupations %}
+                            <li>{{ occupation }} ({{ count }} lần)</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-xs text-gray-500">Chưa đủ dữ liệu.</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <h3 class="font-semibold mb-2">Nhóm tuổi Nhập nhiều nhất:</h3>
+                        {% if top_age_groups %}
+                        <ul class="list-disc list-inside space-y-1 text-sm">
+                            {% for age_group, count in top_age_groups %}
+                            <li>{{ age_group }} ({{ count }} lần)</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-xs text-gray-500">Chưa đủ dữ liệu.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+
+
+        <!-- Action Buttons -->
+        <div class="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'predict' %}"
+                class="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-semibold rounded-lg shadow-lg transition-all"
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
+                onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)';"
+                onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)';">
+                <i class="fas fa-magic"></i>
+                <span>Thử dự đoán ngay</span>
+            </a>
+            <a href="{% url 'history' %}"
+                class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-700 font-semibold rounded-lg shadow-lg border-2 border-gray-200 hover:border-purple-500 hover:text-purple-600 transition-all">
+                <i class="fas fa-history"></i>
+                <span>Xem lịch sử dự đoán</span>
+            </a>
         </div>
     </div>
 </div>
+
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% center;
+        }
+
+        100% {
+            background-position: 200% center;
+        }
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.8;
+        }
+    }
+</style>
+
 {% endblock %}

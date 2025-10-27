@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% block title %}
+Dự đoán thất nghiệp
+{% endblock %}
+{% block content %}
+<div class="card w-full max-w-xl mx-auto my-10 bg-base-100 shadow-xl p-6 md:p-10">
+    <div class="card-body p-0">
+        <h1 class="text-3xl font-bold text-center text-primary mb-2">
+            📊 Dự đoán Rủi ro Thất nghiệp
+        </h1>
+        <p class="text-center text-base-content/80 mb-6">
+            Nhập thông tin nhân khẩu học để dự đoán rủi ro thất nghiệp.
+        </p>
+    </div>
+    <div class="space-y-8">
+        <a href="{% url 'predict' %}"
+            class="inline-block mb-6 px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-700 transition-all"
+            style="box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+            <i class="fas fa-user-times"></i>
+            Chuyển đến Dự đoán Thu nhập
+        </a>
+    </div>
+    <form id="unemployment-form" class="space-y-4">
+
+        <label class="form-control w-full">
+            <div class="label"><span class="label-text">Tuổi (Age):</span></div>
+            <input type="number" id="age" name="age" value="30" required class="input input-bordered w-full"
+                placeholder="Ví dụ: 30" />
+        </label>
+
+        <label class="form-control w-full">
+            <div class="label"><span class="label-text">Số năm Học vấn (Education-num):</span></div>
+            <input type="number" id="education-num" name="education-num" value="13" required
+                class="input input-bordered w-full" placeholder="Ví dụ: 13 (Cử nhân)" />
+        </label>
+
+        <label class="form-control w-full">
+            <div class="label"><span class="label-text">Tình trạng Hôn nhân (Marital-status):</span></div>
+            <select id="marital-status" name="marital-status" class="select select-bordered w-full">
+                <option value="?">Không rõ</option>
+                <option value="Married-civ-spouse">Đã kết hôn (vợ/chồng dân sự)</option>
+                <option value="Never-married">Chưa kết hôn</option>
+                <option value="Divorced">Đã ly hôn</option>
+                <option value="Separated">Ly thân</option>
+                <option value="Widowed">Góa</option>
+                <option value="Married-spouse-absent">Đã kết hôn (vắng mặt)</option>
+                <option value="Married-AF-spouse">Đã kết hôn (Quân đội)</option>
+            </select>
+        </label>
+
+        <label class="form-control w-full">
+            <div class="label"><span class="label-text">Nghề nghiệp (Occupation):</span></div>
+            <select id="occupation" name="occupation" class="select select-bordered w-full">
+                <option value="?">Không rõ / Chưa có</option>
+                <option value="Tech-support">Hỗ trợ Kỹ thuật</option>
+                <option value="Craft-repair">Sửa chữa</option>
+                <option value="Other-service">Dịch vụ khác</option>
+                <option value="Sales">Bán hàng</option>
+                <option value="Exec-managerial">Quản lý/Điều hành</option>
+                <option value="Prof-specialty">Chuyên môn</option>
+                <option value="Handlers-cleaners">Lao công/Bốc vác</option>
+                <option value="Machine-op-inspct">Vận hành máy móc</option>
+                <option value="Adm-clerical">Hành chính văn phòng</option>
+                <option value="Farming-fishing">Nông nghiệp/Ngư nghiệp</option>
+                <option value="Transport-moving">Vận tải</option>
+                <option value="Priv-house-serv">Giúp việc</option>
+                <option value="Protective-serv">Bảo vệ</option>
+                <option value="Armed-Forces">Quân đội</option>
+            </select>
+        </label>
+
+        <label class="form-control w-full">
+            <div class="label"><span class="label-text">Mối quan hệ trong gia đình (Relationship):</span></div>
+            <select id="relationship" name="relationship" class="select select-bordered w-full">
+                <option value="?">Không rõ</option>
+                <option value="Wife">Vợ</option>
+                <option value="Own-child">Con ruột</option>
+                <option value="Husband">Chồng</option>
+                <option value="Not-in-family">Không phải thành viên gia đình</option>
+                <option value="Other-relative">Họ hàng khác</option>
+                <option value="Unmarried">Chưa kết hôn (sống chung)</option>
+            </select>
+        </label>
+
+        <label class="form-control w-full">
+            <div class="label"><span class="label-text">Chủng tộc (Race):</span></div>
+            <select id="race" name="race" class="select select-bordered w-full">
+                <option value="?">Không rõ</option>
+                <option value="White">Da trắng</option>
+                <option value="Asian-Pac-Islander">Châu Á/Đảo Thái Bình Dương</option>
+                <option value="Amer-Indian-Eskimo">Người Mỹ bản địa/Eskimo</option>
+                <option value="Other">Khác</option>
+                <option value="Black">Da đen</option>
+            </select>
+        </label>
+
+        <label class="form-control w-full">
+            <div class="label"><span class="label-text">Giới tính (Sex):</span></div>
+            <select id="sex" name="sex" class="select select-bordered w-full">
+                <option value="?">Không rõ</option>
+                <option value="Female">Nữ</option>
+                <option value="Male">Nam</option>
+            </select>
+        </label>
+
+        <label class="form-control w-full">
+            <div class="label"><span class="label-text">Số giờ làm mỗi tuần (Hours-per-week):</span></div>
+            <input type="number" id="hours-per-week" name="hours-per-week" value="40" required
+                class="input input-bordered w-full" placeholder="Ví dụ: 40" />
+        </label>
+
+        <label class="form-control w-full">
+            <div class="label"><span class="label-text">Quốc gia bản xứ (Native Country):</span></div>
+            <select id="native-country" name="native-country" class="select select-bordered w-full">
+                <option value="?">Không rõ</option>
+                <option value="United-States">Hoa Kỳ</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Philippines">Philippines</option>
+                <option value="Germany">Đức</option>
+                <option value="Canada">Canada</option>
+                <option value="Puerto-Rico">Puerto-Rico</option>
+                <option value="El-Salvador">El-Salvador</option>
+                <option value="India">Ấn Độ</option>
+                <option value="Cuba">Cuba</option>
+                <option value="England">Anh</option>
+                <option value="Jamaica">Jamaica</option>
+                <option value="South">Nam Hàn (South)</option>
+                <option value="China">Trung Quốc</option>
+                <option value="Italy">Ý</option>
+                <option value="Dominican-Republic">Cộng hòa Dominica</option>
+                <option value="Vietnam">Việt Nam</option>
+                <option value="Guatemala">Guatemala</option>
+                <option value="Japan">Nhật Bản</option>
+                <option value="Poland">Ba Lan</option>
+                <option value="Columbia">Columbia</option>
+                <option value="Taiwan">Đài Loan</option>
+                <option value="Haiti">Haiti</option>
+                <option value="Iran">Iran</option>
+                <option value="Portugal">Bồ Đào Nha</option>
+                <option value="Nicaragua">Nicaragua</option>
+                <option value="Peru">Peru</option>
+                <option value="France">Pháp</option>
+                <option value="Greece">Hy Lạp</option>
+                <option value="Ecuador">Ecuador</option>
+                <option value="Ireland">Ireland</option>
+                <option value="Hong">Hồng Kông</option>
+                <option value="Cambodia">Campuchia</option>
+                <option value="Trinadad&Tobago">Trinadad & Tobago</option>
+                <option value="Thailand">Thái Lan</option>
+                <option value="Laos">Lào</option>
+                <option value="Yugoslavia">Nam Tư</option>
+                <option value="Outlying-US(Guam-USVI-etc)">Lãnh thổ hải ngoại Hoa Kỳ</option>
+                <option value="Honduras">Honduras</option>
+                <option value="Hungary">Hungary</option>
+                <option value="Scotland">Scotland</option>
+                <option value="Holand-Netherlands">Hà Lan</option>
+            </select>
+        </label>
+
+        <button type="submit" class="btn btn-primary w-full mt-6">
+            Dự đoán Rủi ro Thất nghiệp
+        </button>
+    </form>
+
+    <div id="result-container" class="mt-8 pt-4 border-t border-base-200 text-center">
+        <h2 class="text-xl font-semibold mb-4">Kết quả Dự đoán:</h2>
+        <div class="flex flex-col items-center space-y-4">
+            <div id="gauge-chart" class="radial-progress text-primary"
+                style="--value:0; --size:6rem; --thickness: 0.8rem;">
+                <span id="gauge-text" class="text-2xl font-bold">0%</span>
+            </div>
+            <p id="result" class="text-lg font-medium max-w-md">---</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    // Hàm JavaScript để cập nhật biểu đồ Gauge
+    function updateGauge(probability) {
+        const gauge = document.getElementById('gauge-chart');
+        const gaugeText = document.getElementById('gauge-text');
+
+        gauge.style.setProperty('--value', probability);
+        gaugeText.innerText = `${probability}%`;
+
+        // Tùy chỉnh màu theo rủi ro (ví dụ: > 50% là rủi ro cao)
+        if (probability >= 50) {
+            gauge.classList.add('text-error');
+            gauge.classList.remove('text-warning', 'text-success');
+        } else if (probability >= 20) {
+            gauge.classList.add('text-warning');
+            gauge.classList.remove('text-success', 'text-error');
+        } else {
+            gauge.classList.add('text-success'); // Rủi ro thấp
+            gauge.classList.remove('text-warning', 'text-error');
+        }
+    }
+
+    // Bắt sự kiện form submit
+    document.getElementById('unemployment-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const resultEl = document.getElementById('result');
+        const loadingEl = document.getElementById('loading'); // Giả sử bạn có 1 spinner
+
+        // 1. Thu thập dữ liệu từ form
+        const data = {
+            'age': parseInt(document.getElementById('age').value),
+            'education-num': parseInt(document.getElementById('education-num').value),
+            'marital-status': document.getElementById('marital-status').value,
+            'occupation': document.getElementById('occupation').value,
+            'relationship': document.getElementById('relationship').value,
+            'race': document.getElementById('race').value,
+            'sex': document.getElementById('sex').value,
+            'hours-per-week': parseInt(document.getElementById('hours-per-week').value),
+            'native-country': document.getElementById('native-country').value,
+            // Gửi capital-gain/loss = 0
+            'capital-gain': 0,
+            'capital-loss': 0,
+        };
+
+        console.log("Dữ liệu gửi đi:", data); // Kiểm tra dữ liệu
+
+        // 2. Gửi dữ liệu đến API THẤT NGHIỆP
+        fetch('/app/api/predict_unemployment/', { // <-- SỬ DỤNG URL MỚI
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // (Bạn cần CSRF token nếu không dùng @csrf_exempt)
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.prediction) {
+                    // Cập nhật văn bản
+                    resultEl.innerHTML = `Dự đoán: <strong>${data.prediction}</strong> (với xác suất <strong>${data.probability}%</strong>).`;
+                    // Cập nhật Đồng hồ đo
+                    updateGauge(data.probability);
+                } else {
+                    resultEl.innerText = `Lỗi: ${data.error}`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultEl.innerText = 'Đã xảy ra lỗi khi kết nối server.';
+            });
+    });
+</script>
+{% endblock %}
