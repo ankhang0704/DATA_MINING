@@ -1,7 +1,9 @@
 {% extends "base.html" %}
+
 {% block title %}
 Lịch sử Dự đoán
 {% endblock %}
+
 {% block content %}
 <div class="min-h-screen py-12 px-4" style="background: linear-gradient(135deg, #f5f7fa 0%, #e8ebf2 100%);">
     <div class="max-w-6xl mx-auto">
@@ -9,14 +11,13 @@ Lịch sử Dự đoán
         <!-- Header -->
         <div class="text-center mb-12" style="animation: fadeIn 0.8s ease-out;">
             <h1 class="text-5xl font-extrabold mb-4">
-                <span
-                    style="background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text; animation: gradient 3s linear infinite;">
+                <span style="background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text; animation: gradient 3s linear infinite;">
                     Lịch sử Dự đoán
                 </span>
             </h1>
             <p class="text-lg text-gray-600">
-                Xem lại tất cả các dự đoán thu nhập của <span class="font-bold"
-                    style="color: #764ba2;">{{user.first_name|default:user.username }}</span>
+                Xem lại tất cả các dự đoán thu nhập của 
+                <span class="font-bold" style="color: #764ba2;">{{ user.first_name|default:user.username }}</span>
             </p>
         </div>
 
@@ -51,120 +52,225 @@ Lịch sử Dự đoán
                 </div>
             </div>
         </div>
+
+        <!-- Filter Buttons -->
         <div class="mb-4 flex flex-wrap gap-2 justify-center" id="filter-buttons">
             <button class="btn btn-sm btn-active filter-btn" data-filter="all">Tất cả</button>
             <button class="btn btn-sm filter-btn" data-filter="Thu nhập">Thu nhập</button>
             <button class="btn btn-sm filter-btn" data-filter="Thất nghiệp">Công việc</button>
         </div>
-        <!-- Table Card -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden" style="transition: transform 0.3s ease;">
-            <table class="w-full" id="history-table">
-                <thead style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);">
-                    <tr>
-                        <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">#</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Loại Dự đoán</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Kết quả Dự đoán</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Xác suất</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Thời gian</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Chi tiết Input</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for record in history %}
-                    <tr class="border-t border-gray-100 hover:bg-purple-50 transition-colors history-row"
-                        data-type="{{ record.type }}">
-                        <td class="px-6 py-4 font-semibold text-gray-700">{{ forloop.counter }}</td>
-                        <td class="px-6 py-4">
-                            {% if record.type == 'Thu nhập' %}
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
-                                style="background-color: #d1fae5; color: #0d3fe0;">{{ record.type }}</span>
-                            {% elif record.type == 'Thất nghiệp' %}
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
-                                style="background-color: #fee2e2; color: #991b1b;">Công việc</span>
-                            {% else %}
+
+        <!-- Table Card (Desktop) -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden hidden md:block" style="transition: transform 0.3s ease;">
+            <div class="overflow-x-auto">
+                <table class="w-full" id="history-table">
+                    <thead style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">#</th>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Loại Dự đoán</th>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Kết quả Dự đoán</th>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Xác suất</th>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Thời gian</th>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Chi tiết Input</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in history %}
+                        <tr class="border-t border-gray-100 hover:bg-purple-50 transition-colors history-row-desktop"
+                            data-type="{{ record.type }}">
+                            <td class="px-6 py-4 font-semibold text-gray-700">{{ forloop.counter }}</td>
+                            
+                            <td class="px-6 py-4">
+                                {% if record.type == 'Thu nhập' %}
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
+                                    style="background-color: #d1fae5; color: #0d3fe0;">
+                                    {{ record.type }}
+                                </span>
+                                {% elif record.type == 'Thất nghiệp' %}
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
+                                    style="background-color: #fee2e2; color: #991b1b;">
+                                    Công việc
+                                </span>
+                                {% else %}
+                                {{ record.type }}
+                                {% endif %}
+                            </td>
+                            
+                            <td class="px-6 py-4">
+                                {% if record.type == 'Thu nhập' %}
+                                    {% if record.output_result == '>50K' %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
+                                        style="background-color: #d1fae5; color: #065f46;">
+                                        <i class="fas fa-arrow-up mr-1"></i>
+                                        {{ record.output_result }}
+                                    </span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
+                                        style="background-color: #fee2e2; color: #991b1b;">
+                                        <i class="fas fa-arrow-down mr-1"></i>
+                                        {{ record.output_result }}
+                                    </span>
+                                    {% endif %}
+                                {% elif record.type == 'Thất nghiệp' %}
+                                    {% if record.output_result == 'Thất nghiệp' %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
+                                        style="background-color: #fee2e2; color: #991b1b;">
+                                        <i class="fas fa-arrow-down mr-1"></i>
+                                        {{ record.output_result }}
+                                    </span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
+                                        style="background-color: #d1fae5; color: #065f46;">
+                                        <i class="fas fa-arrow-up mr-1"></i>
+                                        {{ record.output_result }}
+                                    </span>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full rounded-full transition-all probability-bar" data-probability="{{ record.probability }}" style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
+                                        </div>
+                                    </div>
+                                    <span class="text-sm font-semibold text-gray-700">{{ record.probability }}%</span>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-600">
+                                    <div class="font-semibold">{{ record.prediction_date|date:"H:i" }}</div>
+                                    <div class="text-xs text-gray-500">{{ record.prediction_date|date:"d/m/Y" }}</div>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                <button class="detail-btn px-4 py-2 text-sm font-semibold rounded-lg transition-all"
+                                    data-target="details-desktop-{{ forloop.counter }}"
+                                    style="background-color: #f3f4f6; color: #667eea;"
+                                    onmouseover="this.style.backgroundColor='#667eea'; this.style.color='white';"
+                                    onmouseout="this.style.backgroundColor='#f3f4f6'; this.style.color='#667eea';">
+                                    <i class="fas fa-eye"></i> Xem chi tiết
+                                </button>
+
+                                <div id="details-desktop-{{ forloop.counter }}" class="hidden mt-4 p-4 bg-gray-50 rounded-lg">
+                                    <div class="grid grid-cols-2 gap-3 text-sm">
+                                        {% for key, value in record.input_data.items %}
+                                        <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                                            <span class="font-semibold text-gray-600">{{ key|upper }}:</span>
+                                            <span class="text-gray-800">{{ value }}</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-400">
+                                <i class="fas fa-folder-open text-4xl mb-3"></i>
+                                <p>Không tìm thấy bản ghi nào.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Card Layout (Mobile) -->
+        <div class="md:hidden space-y-4" id="mobile-history">
+            {% for record in history %}
+            <div class="bg-white rounded-xl shadow-lg p-4 history-row-mobile" data-type="{{ record.type }}">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg font-bold text-gray-700">#{{ forloop.counter }}</span>
+                        {% if record.type == 'Thu nhập' %}
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold"
+                            style="background-color: #d1fae5; color: #0d3fe0;">
                             {{ record.type }}
-                            {% endif %}
-                        </td>
-                        <td class="px-6 py-4">
-                            {% if record.type == 'Thu nhập' %}
-                            {% if record.output_result == '>50K' %}
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
-                                style="background-color: #d1fae5; color: #065f46;">
-                                <i class="fas fa-arrow-up mr-1"></i>
-                                {{ record.output_result }}
-                            </span>
-                            {% else %}
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
-                                style="background-color: #fee2e2; color: #991b1b;">
-                                <i class="fas fa-arrow-down mr-1"></i>
-                                {{ record.output_result }}
-                            </span>
-                            {% endif %}
-                            {% elif record.type == 'Thất nghiệp' %}
-                            {% if record.output_result == 'Thất nghiệp' %}
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
-                                style="background-color: #fee2e2; color: #991b1b;">
-                                <i class="fas fa-arrow-down mr-1"></i>
-                                {{ record.output_result }}
-                            </span>
-                            {% else %}
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
-                                style="background-color: #d1fae5; color: #065f46;">
-                                <i class="fas fa-arrow-up mr-1"></i>
-                                {{ record.output_result }}
-                            </span>
-                            {% endif %}
-                            {% endif %}
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-2">
-                                <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                    <div class="h-full rounded-full transition-all"
-                                        style="width: {{ record.probability }}%; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
-                                    </div>
-                                </div>
-                                <span class="text-sm font-semibold text-gray-700">{{ record.probability }}%</span>
-                            </div>
-                        </td>
+                        </span>
+                        {% elif record.type == 'Thất nghiệp' %}
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold"
+                            style="background-color: #fee2e2; color: #991b1b;">
+                            Công việc
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="text-right text-xs text-gray-500">
+                        <div class="font-semibold text-gray-700">{{ record.prediction_date|date:"H:i" }}</div>
+                        <div>{{ record.prediction_date|date:"d/m/Y" }}</div>
+                    </div>
+                </div>
 
-                        <td class="px-6 py-4">
-                            <div class="text-sm text-gray-600">
-                                <div class="font-semibold">{{ record.prediction_date|date:"H:i" }}</div>
-                                <div class="text-xs text-gray-500">{{ record.prediction_date|date:"d/m/Y" }}</div>
-                            </div>
-                        </td>
+                <div class="mb-3">
+                    <p class="text-xs text-gray-500 mb-1">Kết quả dự đoán:</p>
+                    {% if record.type == 'Thu nhập' %}
+                        {% if record.output_result == '>50K' %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
+                            style="background-color: #d1fae5; color: #065f46;">
+                            <i class="fas fa-arrow-up mr-1"></i>
+                            {{ record.output_result }}
+                        </span>
+                        {% else %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
+                            style="background-color: #fee2e2; color: #991b1b;">
+                            <i class="fas fa-arrow-down mr-1"></i>
+                            {{ record.output_result }}
+                        </span>
+                        {% endif %}
+                    {% elif record.type == 'Thất nghiệp' %}
+                        {% if record.output_result == 'Thất nghiệp' %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
+                            style="background-color: #fee2e2; color: #991b1b;">
+                            <i class="fas fa-arrow-down mr-1"></i>
+                            {{ record.output_result }}
+                        </span>
+                        {% else %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
+                            style="background-color: #d1fae5; color: #065f46;">
+                            <i class="fas fa-arrow-up mr-1"></i>
+                            {{ record.output_result }}
+                        </span>
+                        {% endif %}
+                    {% endif %}
+                </div>
 
-                        <td class="px-6 py-4">
-                            <button onclick="toggleDetails({{ forloop.counter }})"
-                                class="px-4 py-2 text-sm font-semibold rounded-lg transition-all"
-                                style="background-color: #f3f4f6; color: #667eea;"
-                                onmouseover="this.style.backgroundColor='#667eea'; this.style.color='white';"
-                                onmouseout="this.style.backgroundColor='#f3f4f6'; this.style.color='#667eea';">
-                                <i class="fas fa-eye"></i> Xem chi tiết
-                            </button>
-
-                            <div id="details-{{ forloop.counter }}" class="hidden mt-4 p-4 bg-gray-50 rounded-lg">
-                                <div class="grid grid-cols-2 gap-3 text-sm">
-                                    {% for key, value in record.input_data.items %}
-                                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                        <span class="font-semibold text-gray-600">{{ key|upper }}:</span>
-                                        <span class="text-gray-800">{{ value }}</span>
-                                    </div>
-                                    {% endfor %}
-                                </div>
+                <div class="mb-4">
+                    <p class="text-xs text-gray-500 mb-2">Xác suất:</p>
+                    <div class="flex items-center gap-2">
+                        <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full transition-all probability-bar-mobile" data-probability="{{ record.probability }}" style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
                             </div>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" class="px-6 py-12 text-center text-gray-400">
-                            <i class="fas fa-folder-open text-4xl mb-3"></i>
-                            <p>Không tìm thấy bản ghi nào.</p>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700">{{ record.probability }}%</span>
+                    </div>
+                </div>
+
+                <button class="detail-btn-mobile w-full px-4 py-2 text-sm font-semibold rounded-lg transition-all"
+                    data-target="details-mobile-{{ forloop.counter }}"
+                    style="background-color: #f3f4f6; color: #667eea;">
+                    <i class="fas fa-eye"></i> Xem chi tiết
+                </button>
+
+                <div id="details-mobile-{{ forloop.counter }}" class="hidden mt-4 p-3 bg-gray-50 rounded-lg">
+                    <div class="space-y-2 text-sm">
+                        {% for key, value in record.input_data.items %}
+                        <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                            <span class="font-semibold text-gray-600">{{ key|upper }}:</span>
+                            <span class="text-gray-800">{{ value }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="bg-white rounded-xl shadow-lg p-8 text-center text-gray-400">
+                <i class="fas fa-folder-open text-4xl mb-3"></i>
+                <p>Không tìm thấy bản ghi nào.</p>
+            </div>
+            {% endfor %}
         </div>
 
         <!-- Action Button -->
@@ -188,7 +294,6 @@ Lịch sử Dự đoán
             opacity: 0;
             transform: translateY(-20px);
         }
-
         to {
             opacity: 1;
             transform: translateY(0);
@@ -199,7 +304,6 @@ Lịch sử Dự đoán
         0% {
             background-position: 0% center;
         }
-
         100% {
             background-position: 200% center;
         }
@@ -208,37 +312,88 @@ Lịch sử Dự đoán
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Set probability bar widths (Desktop)
+        const probabilityBars = document.querySelectorAll('.probability-bar');
+        probabilityBars.forEach(bar => {
+            const probability = bar.getAttribute('data-probability');
+            bar.style.width = probability + '%';
+        });
+
+        // Set probability bar widths (Mobile)
+        const probabilityBarsMobile = document.querySelectorAll('.probability-bar-mobile');
+        probabilityBarsMobile.forEach(bar => {
+            const probability = bar.getAttribute('data-probability');
+            bar.style.width = probability + '%';
+        });
+
+        // Filter functionality - Works for both Desktop and Mobile
         const filterButtons = document.querySelectorAll('.filter-btn');
-        const historyRows = document.querySelectorAll('#history-table tbody .history-row');
+        const historyRowsDesktop = document.querySelectorAll('.history-row-desktop');
+        const historyRowsMobile = document.querySelectorAll('.history-row-mobile');
 
         filterButtons.forEach(button => {
             button.addEventListener('click', function () {
                 const filterValue = this.getAttribute('data-filter');
 
-                // Cập nhật trạng thái active cho nút
+                // Update active button
                 filterButtons.forEach(btn => btn.classList.remove('btn-active'));
                 this.classList.add('btn-active');
 
-                // Lọc các hàng trong bảng
-                historyRows.forEach(row => {
+                // Filter desktop rows
+                historyRowsDesktop.forEach(row => {
                     const rowType = row.getAttribute('data-type');
-
                     if (filterValue === 'all' || rowType === filterValue) {
-                        row.style.display = ''; // Hiển thị hàng
+                        row.style.display = '';
                     } else {
-                        row.style.display = 'none'; // Ẩn hàng
+                        row.style.display = 'none';
+                    }
+                });
+
+                // Filter mobile rows
+                historyRowsMobile.forEach(row => {
+                    const rowType = row.getAttribute('data-type');
+                    if (filterValue === 'all' || rowType === filterValue) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
                     }
                 });
             });
         });
+
+        // Detail toggle functionality (Desktop)
+        const detailButtons = document.querySelectorAll('.detail-btn');
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const targetId = this.getAttribute('data-target');
+                const detailsDiv = document.getElementById(targetId);
+                
+                if (detailsDiv.classList.contains('hidden')) {
+                    detailsDiv.classList.remove('hidden');
+                    this.innerHTML = '<i class="fas fa-eye-slash"></i> Ẩn chi tiết';
+                } else {
+                    detailsDiv.classList.add('hidden');
+                    this.innerHTML = '<i class="fas fa-eye"></i> Xem chi tiết';
+                }
+            });
+        });
+
+        // Detail toggle functionality (Mobile)
+        const detailButtonsMobile = document.querySelectorAll('.detail-btn-mobile');
+        detailButtonsMobile.forEach(button => {
+            button.addEventListener('click', function () {
+                const targetId = this.getAttribute('data-target');
+                const detailsDiv = document.getElementById(targetId);
+                
+                if (detailsDiv.classList.contains('hidden')) {
+                    detailsDiv.classList.remove('hidden');
+                    this.innerHTML = '<i class="fas fa-eye-slash"></i> Ẩn chi tiết';
+                } else {
+                    detailsDiv.classList.add('hidden');
+                    this.innerHTML = '<i class="fas fa-eye"></i> Xem chi tiết';
+                }
+            });
+        });
     });
-    function toggleDetails(id) {
-        const detailsDiv = document.getElementById('details-' + id);
-        if (detailsDiv.classList.contains('hidden')) {
-            detailsDiv.classList.remove('hidden');
-        } else {
-            detailsDiv.classList.add('hidden');
-        }
-    }
 </script>
 {% endblock %}

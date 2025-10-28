@@ -31,20 +31,13 @@
                     năng có việc làm của một cá nhân.
                 </p>
                 <p class="text-lg text-gray-600 mb-4">
-                    Đặc trưng: Dữ liệu chứa các thông tin như tuổi, loại hình công việc,
-                    trình độ học vấn
-                    , tình trạng hôn nhân, nghề nghiệp, số giờ làm
-                    việc/tuần,
-                    lợi nhuận/thua lỗ vốn, quốc gia bản xứ, v.v. Các đặc
-                    trưng bao gồm cả dạng
-                    liên tục (số) và rời rạc (chữ/hạng mục).
-                </p>
-                <p class="text-lg text-gray-600 mb-4">
-                    Các thuật toán Machine Learning cổ điển như <strong>Logistic Regression</strong>
-                    và <strong>Decision Tree</strong> có thể xây dựng mô hình dự đoán chính xác và dễ hiểu.
+                    Lưu ý về Dữ liệu Thất nghiệp: Tỷ lệ người được xác định là <strong>"Thất nghiệp"</strong> trong bộ
+                    dữ liệu này cực kỳ
+                    thấp (khoảng
+                    0.06%), gây ra tình trạng mất cân bằng dữ liệu nghiêm trọng.
                 </p>
                 <p class="text-lg text-gray-600">
-                    <strong> Chúng tôi áp dụng thuật toán Machine Learning Logistic Regression
+                    <strong> Chúng tôi áp dụng thuật toán Hồi quy Logistic (Logistic Regression)
                         để xây dựng mô hình dự đoán chính xác và dễ hiểu.</strong>
                 </p>
             </div>
@@ -76,7 +69,16 @@
                         </div>
                         <div>
                             <h3 class="text-xl font-semibold text-gray-800 mb-2">Phương pháp</h3>
-                            <p class="text-gray-600">Supervised Learning với Logistic Regression và Decision Tree</p>
+                            <p class="text-gray-600">Thuật toán Chính: Hồi quy Logistic (Logistic Regression)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-brain text-2xl text-orange-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Mô hình riêng biệt</h3>
+                            <p class="text-gray-600">Gồm mô hình cho: Dự đoán Thu nhập, Dự đoán Thất nghiệp.</p>
                         </div>
                     </div>
                 </div>
@@ -547,7 +549,7 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-semibold text-gray-800 mb-2">Huấn luyện Mô hình</h3>
-                        <p class="text-gray-600">Train Logistic Regression và Decision Tree để dự đoán cả thu nhập và
+                        <p class="text-gray-600">Train Logistic Regression để dự đoán cả thu nhập và
                             tình trạng việc làm, sử dụng train-test split (80/20)</p>
                     </div>
                 </div>
@@ -569,8 +571,149 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-semibold text-gray-800 mb-2">Triển khai & Trực quan hóa</h3>
-                        <p class="text-gray-600">Tích hợp mô hình vào web app, tạo biểu đồ Feature Importance và
-                            Confusion Matrix</p>
+                        <p class="text-gray-600">Tích hợp mô hình vào web app, tạo biểu đồ Feature Importance
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-20">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Quy trình Xử lý Dữ liệu & Xây dựng Mô hình
+            </h2>
+            <p class="text-center text-gray-600 mb-10 max-w-2xl mx-auto">
+                Để dự đoán Thu nhập và Thất nghiệp, chúng tôi đã áp dụng quy trình chuẩn trong Khoa học Dữ liệu, bao gồm
+                các
+                bước tiền xử lý, kỹ thuật đặc trưng, huấn luyện và đánh giá mô hình Logistic Regression.
+            </p>
+
+            <div class="space-y-4">
+
+                <div class="collapse collapse-plus bg-base-200 rounded-lg shadow">
+                    <input type="radio" name="model-steps" checked="checked" />
+                    <div class="collapse-title flex items-center gap-4">
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-chart-line text-xl text-purple-600"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">Chuẩn bị Dữ liệu & Kỹ thuật Đặc trưng</h3>
+                        </div>
+                    </div>
+                    <div class="collapse-content px-6 pt-0 pb-4 text-gray-600 space-y-4">
+                        <p><strong>Mục tiêu:</strong> Làm sạch và biến đổi dữ liệu thô thành định dạng phù hợp cho mô
+                            hình
+                            Logistic Regression.</p>
+                        <ul class="list-disc list-inside space-y-2 pl-4">
+                            <li>
+                                <strong>Xử lý Giá trị Không xác định ('?'):</strong> Giữ lại '?' như một hạng mục hợp lệ
+                                thay vì
+                                loại bỏ, để tận dụng thông tin tiềm ẩn.
+                            </li>
+                            <li>
+                                <strong>Loại bỏ Đặc trưng Thừa:</strong> Bỏ cột `fnlwgt` (trọng số) và `education` (đã
+                                có
+                                `education-num`).
+                            </li>
+                            <li>
+                                <strong>Kỹ thuật Đặc trưng (Feature Engineering):</strong>
+                                <ul class="list-circle list-inside pl-6 mt-1">
+                                    <li><em>Gộp Đặc trưng Vốn:</em> Tạo `net_capital = capital-gain - capital-loss`.
+                                    </li>
+                                    <li><em>Rời rạc hóa (Binning) Tuổi:</em> Chia `age` thành các nhóm (17-25, 26-40,
+                                        ...) để
+                                        nắm bắt xu hướng phi tuyến tính.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>Mã hóa One-Hot:</strong> Chuyển đổi tất cả các đặc trưng hạng mục (nghề nghiệp,
+                                hôn
+                                nhân, nhóm tuổi, ...) thành dạng số (0/1), tạo ra khoảng 80-90+ đặc trưng đầu vào.
+                            </li>
+                            <li>
+                                <strong>Chuẩn hóa (Scaling):</strong> Dùng `StandardScaler` để đưa các cột số
+                                (`education-num`,
+                                `hours-per-week`, `net_capital`) về cùng thang đo (quan trọng cho LR).
+                            </li>
+                            <li>
+                                <strong>Xử lý Rò rỉ Dữ liệu (Mô hình Thất nghiệp):</strong> Loại bỏ hoàn toàn cột
+                                `workclass`
+                                trước khi huấn luyện mô hình Thất nghiệp.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="collapse collapse-plus bg-base-200 rounded-lg shadow">
+                    <input type="radio" name="model-steps" />
+                    <div class="collapse-title flex items-center gap-4">
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-code-compare text-x1 text-yellow-500"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">Huấn luyện & Đánh giá Mô hình</h3>
+                        </div>
+                    </div>
+                    <div class="collapse-content px-6 pt-0 pb-4 text-gray-600 space-y-4">
+                        <p><strong>Mục tiêu:</strong> Xây dựng và kiểm tra hiệu quả của mô hình Logistic Regression.</p>
+                        <ul class="list-disc list-inside space-y-2 pl-4">
+                            <li>
+                                <strong>Phân chia Dữ liệu:</strong> Chia thành 80% huấn luyện và 20% kiểm tra.
+                            </li>
+                            <li>
+                                <strong>Huấn luyện:</strong> Dùng thuật toán Logistic Regression trên tập huấn luyện đã
+                                xử lý.
+                            </li>
+                            <li>
+                                <strong>Xử lý Mất cân bằng (Mô hình Thất nghiệp):</strong> Sử dụng
+                                `class_weight='balanced'` để
+                                mô hình chú trọng hơn vào việc dự đoán lớp "Thất nghiệp" (chỉ chiếm 0.06% dữ liệu).
+                            </li>
+                            <li>
+                                <strong>Đánh giá Kết quả:</strong>
+                                <ul class="list-circle list-inside pl-6 mt-1">
+                                    <li><em>Mô hình Thu nhập:</em> Đạt **Accuracy 85.78%**, là kết quả tốt và cạnh
+                                        tranh.</li>
+                                    <li><em>Mô hình Thất nghiệp:</em> Đạt Accuracy 93.06% (do class weighting). Tuy
+                                        nhiên,
+                                        **Precision/Recall/F1-score cho lớp "Thất nghiệp" là 0.00%**, cho thấy mô hình
+                                        thất bại
+                                        trong việc dự đoán lớp thiểu số này do tín hiệu quá yếu.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="collapse collapse-plus bg-base-200 rounded-lg shadow">
+                    <input type="radio" name="model-steps" />
+                    <div class="collapse-title flex items-center gap-4">
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-laptop-code text-x1 text-blue-500"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">Công nghệ Sử dụng</h3>
+                        </div>
+                    </div>
+                    <div class="collapse-content px-6 pt-0 pb-4 text-gray-600 space-y-4">
+                        <p><strong>Ngôn ngữ:</strong> Python</p>
+                        <p><strong>Thư viện:</strong></p>
+                        <ul class="list-disc list-inside pl-4 space-y-2">
+                            <li><em>pandas:</em> Xử lý và phân tích dữ liệu</li>
+                            <li><em>NumPy:</em> Tính toán số học hiệu quả</li>
+                            <li><em>scikit-learn:</em> Triển khai Logistic Regression, chuẩn hóa, mã hóa One-Hot,
+                                đánh
+                                giá mô hình</li>
+                            <li><em>Matplotlib:</em> Trực quan hóa dữ liệu và kết quả mô hình</li>
+                            <li><em>Django:</em> Xây dựng giao diện web cho mô hình dự đoán</li>
+                        </ul>
+
                     </div>
                 </div>
             </div>

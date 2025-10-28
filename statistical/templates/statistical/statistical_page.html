@@ -30,7 +30,7 @@ Thống kê & Phân tích Dữ liệu
         </div>
 
         <!-- Stats Cards Grid - Income -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
 
             <!-- Card 1: Model Accuracy -->
             <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl card-hover">
@@ -44,7 +44,8 @@ Thống kê & Phân tích Dữ liệu
                     </div>
                 </div>
                 <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div class="h-full rounded-full transition-all duration-1000 progress-gradient-purple" style="width: {{ model_accuracy }}%;"></div>
+                    <div class="h-full rounded-full transition-all duration-1000 progress-gradient-purple progress-bar"
+                        data-width="{{ model_accuracy }}"></div>
                 </div>
                 <p class="text-xs text-gray-500 mt-3 text-center">(Hồi quy Logistic)</p>
             </div>
@@ -68,6 +69,23 @@ Thống kê & Phân tích Dữ liệu
                 </div>
             </div>
 
+            <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl card-hover">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-4 rounded-full icon-gradient-red">
+                        <i class="fas fa-arrow-trend-down text-2xl text-white"></i>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500 mb-1">Tỷ lệ ≤50K</p>
+                        <p class="text-4xl font-bold text-red-600" id="negative-rate-text">0%</p>
+                    </div>
+                </div>
+                <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-red-500 rounded-full transition-all duration-1000 progress-bar"
+                        id="negative-rate-bar" data-positive="{{ positive_rate }}"></div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3 text-center">Trong lịch sử của bạn</p>
+            </div>
+            
             <!-- Card 3: Positive Rate -->
             <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl card-hover">
                 <div class="flex items-center justify-between mb-4">
@@ -80,7 +98,8 @@ Thống kê & Phân tích Dữ liệu
                     </div>
                 </div>
                 <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div class="h-full bg-green-500 rounded-full transition-all duration-1000" style="width: {{ positive_rate }}%;"></div>
+                    <div class="h-full bg-green-500 rounded-full transition-all duration-1000 progress-bar"
+                        data-width="{{ positive_rate }}"></div>
                 </div>
                 <p class="text-xs text-gray-500 mt-3 text-center">Trong lịch sử của bạn</p>
             </div>
@@ -181,7 +200,8 @@ Thống kê & Phân tích Dữ liệu
                     </div>
                 </div>
                 <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div class="h-full rounded-full transition-all duration-1000 progress-gradient-purple" style="width: {{ model_accuracy_unemployment }}%;"></div>
+                    <div class="h-full rounded-full transition-all duration-1000 progress-gradient-purple progress-bar"
+                        data-width="{{ model_accuracy_unemployment }}"></div>
                 </div>
                 <p class="text-xs text-gray-500 mt-3 text-center">(Hồi quy Logistic)</p>
             </div>
@@ -217,12 +237,13 @@ Thống kê & Phân tích Dữ liệu
                     </div>
                 </div>
                 <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div class="h-full bg-red-500 rounded-full transition-all duration-1000" style="width: {{ unemployed_rate }}%;"></div>
+                    <div class="h-full bg-red-500 rounded-full transition-all duration-1000 progress-bar"
+                        data-width="{{ unemployed_rate }}"></div>
                 </div>
                 <p class="text-xs text-gray-500 mt-3 text-center">Trong lịch sử của bạn</p>
             </div>
 
-            <!-- Card 4: Employed Rate - TÍNH TỪ unemployed_rate -->
+            <!-- Card 4: Employed Rate -->
             <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl card-hover">
                 <div class="flex items-center justify-between mb-4">
                     <div class="p-4 rounded-full icon-gradient-blue">
@@ -230,13 +251,12 @@ Thống kê & Phân tích Dữ liệu
                     </div>
                     <div class="text-right">
                         <p class="text-sm text-gray-500 mb-1">Tỷ lệ Có việc làm</p>
-                        {% widthratio 100 1 unemployed_rate as unemployed_float %}
-                        <p class="text-4xl font-bold text-blue-600">{{ unemployed_rate|add:"-100"|floatformat:2|slice:"1:" }}%</p>
+                        <p class="text-4xl font-bold text-blue-600" id="employed-rate-text">0%</p>
                     </div>
                 </div>
                 <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div class="h-full bg-blue-500 rounded-full transition-all duration-1000"
-                        style="width: calc(100% - {{ unemployed_rate }}%);"></div>
+                    <div class="h-full bg-blue-500 rounded-full transition-all duration-1000 progress-bar"
+                        id="employed-rate-bar" data-unemployed="{{ unemployed_rate }}"></div>
                 </div>
                 <p class="text-xs text-gray-500 mt-3 text-center">Trong lịch sử của bạn</p>
             </div>
@@ -495,7 +515,6 @@ Thống kê & Phân tích Dữ liệu
     /* Progress Bar Gradient */
     .progress-gradient-purple {
         background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        width: 85%;
     }
 
     /* Color Classes */
@@ -577,5 +596,41 @@ Thống kê & Phân tích Dữ liệu
         transform: translateY(-2px);
     }
 </style>
+
+<script>
+    const negativeRateBar = document.getElementById('negative-rate-bar');
+    const negativeRateText = document.getElementById('negative-rate-text');
+
+    if (negativeRateBar && negativeRateText) {
+        const positiveRate = parseFloat(negativeRateBar.getAttribute('data-positive')) || 0;
+        const negativeRate = 100 - positiveRate;
+
+        negativeRateBar.style.width = negativeRate + '%';
+        negativeRateText.textContent = negativeRate.toFixed(2) + '%';
+    }
+    // Set progress bar widths using data attributes
+    document.addEventListener('DOMContentLoaded', function () {
+        // Set all progress bars with data-width attribute
+        const progressBars = document.querySelectorAll('.progress-bar[data-width]');
+        progressBars.forEach(bar => {
+            const width = bar.getAttribute('data-width');
+            if (width) {
+                bar.style.width = width + '%';
+            }
+        });
+
+        // Calculate and set employed rate (100 - unemployed_rate)
+        const employedRateBar = document.getElementById('employed-rate-bar');
+        const employedRateText = document.getElementById('employed-rate-text');
+
+        if (employedRateBar && employedRateText) {
+            const unemployedRate = parseFloat(employedRateBar.getAttribute('data-unemployed')) || 0;
+            const employedRate = 100 - unemployedRate;
+
+            employedRateBar.style.width = employedRate + '%';
+            employedRateText.textContent = employedRate.toFixed(2) + '%';
+        }
+    });
+</script>
 
 {% endblock %}
