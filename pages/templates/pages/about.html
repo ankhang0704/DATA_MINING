@@ -62,6 +62,132 @@
             </div>
         </div>
 
+        <!-- Phần mô hình dự đoán -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-20">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Hai Mô Hình Dự Đoán</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Mô hình 1: Dự đoán Thu nhập -->
+                <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-8 border-2 border-purple-200 hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 bg-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-dollar-sign text-3xl text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">Dự Đoán Thu Nhập</h3>
+                            <p class="text-sm text-purple-600 font-semibold">Income Prediction Model</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-purple-600 mt-1"></i>
+                            <div>
+                                <p class="font-semibold text-gray-800">Mục tiêu:</p>
+                                <p class="text-gray-600 text-sm">Dự đoán mức thu nhập của cá nhân</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-purple-600 mt-1"></i>
+                            <div>
+                                <p class="font-semibold text-gray-800">Kết quả:</p>
+                                <div class="flex gap-2 mt-2">
+                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-sm font-semibold">≤50K USD/năm</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-semibold">>50K USD/năm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-purple-600 mt-1"></i>
+                            <div>
+                                <p class="font-semibold text-gray-800">Ứng dụng:</p>
+                                <p class="text-gray-600 text-sm">Đánh giá tiềm năng thu nhập, hoạch định tài chính</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-6 border-t border-purple-200">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-700 font-semibold">Độ chính xác dự kiến:</span>
+                                <span class="text-2xl font-bold text-purple-600">85%+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mô hình 2: Dự đoán Tình trạng Việc làm -->
+                <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-8 border-2 border-emerald-200 hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 bg-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-briefcase text-3xl text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">Dự Đoán Việc Làm</h3>
+                            <p class="text-sm text-emerald-600 font-semibold">Employment Status Model</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-emerald-600 mt-1"></i>
+                            <div>
+                                <p class="font-semibold text-gray-800">Mục tiêu:</p>
+                                <p class="text-gray-600 text-sm">Dự đoán tình trạng việc làm của cá nhân</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-emerald-600 mt-1"></i>
+                            <div>
+                                <p class="font-semibold text-gray-800">Kết quả:</p>
+                                <div class="flex gap-2 mt-2">
+                                    <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-sm font-semibold">Có việc làm</span>
+                                    <span class="px-3 py-1 bg-red-100 text-red-700 rounded-lg text-sm font-semibold">Thất nghiệp</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-emerald-600 mt-1"></i>
+                            <div>
+                                <p class="font-semibold text-gray-800">Ứng dụng:</p>
+                                <p class="text-gray-600 text-sm">Đánh giá khả năng tìm việc, định hướng nghề nghiệp</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-6 border-t border-emerald-200">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-700 font-semibold">Độ chính xác dự kiến:</span>
+                                <span class="text-2xl font-bold text-emerald-600">82%+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin bổ sung về 2 mô hình -->
+            <div class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-lightbulb text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Lợi ích của 2 Mô hình</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-arrow-right text-blue-600 mt-1 text-sm"></i>
+                                <p class="text-gray-700 text-sm"><strong>Phân tích toàn diện:</strong> Hiểu rõ cả khía cạnh thu nhập và tình trạng việc làm</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-arrow-right text-blue-600 mt-1 text-sm"></i>
+                                <p class="text-gray-700 text-sm"><strong>So sánh kết quả:</strong> Đối chiếu dự đoán từ 2 góc độ khác nhau</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-arrow-right text-blue-600 mt-1 text-sm"></i>
+                                <p class="text-gray-700 text-sm"><strong>Quyết định chính xác:</strong> Đưa ra chiến lược nghề nghiệp và tài chính tốt hơn</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-arrow-right text-blue-600 mt-1 text-sm"></i>
+                                <p class="text-gray-700 text-sm"><strong>Đa dạng thuật toán:</strong> Sử dụng cả Logistic Regression và Decision Tree</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-20">
             <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Công nghệ & Thư viện</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -243,7 +369,7 @@
             <div class="mt-8 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6">
                 <h3 class="text-xl font-semibold text-gray-800 mb-3 flex items-center gap-2">
                     <i class="fas fa-target text-green-600"></i>
-                    Target Variable (Biến mục tiêu)
+                    Target Variables (Biến mục tiêu)
                 </h3>
                 <div class="space-y-3">
                     <div class="flex items-center gap-4">
@@ -288,12 +414,12 @@
                     </div>
                 </div>
                 <div class="flex gap-4">
-                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-user-slash text-xl text-red-600"></i>
+                    <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-briefcase text-xl text-emerald-600"></i>
                     </div>
                     <div>
                         <h3 class="text-xl font-semibold text-gray-800 mb-2">Dự đoán Tình trạng Việc làm</h3>
-                        <p class="text-gray-600">Xác định khả năng có việc làm hoặc thất nghiệp</p>
+                        <p class="text-gray-600">Xác định khả năng có việc làm hoặc thất nghiệp dựa trên profile nhân khẩu học</p>
                     </div>
                 </div>
                 <div class="flex gap-4">
@@ -487,6 +613,10 @@
             <a href="{% url 'predict' %}" class="px-8 py-4 bg-white text-purple-700 rounded-xl font-semibold hover:bg-purple-50 transition-colors shadow-lg hover:shadow-xl">
                 <i class="fas fa-chart-line mr-2"></i>
                 Dự đoán thu nhập
+            </a>
+            <a href="{% url 'unemployment' %}" class="px-8 py-4 bg-emerald-500 text-white rounded-xl font-semibold hover:bg-emerald-600 transition-colors shadow-lg hover:shadow-xl">
+                <i class="fas fa-briefcase mr-2"></i>
+                Dự đoán việc làm
             </a>
             <a href="#" class="px-8 py-4 bg-purple-500 bg-opacity-30 backdrop-blur-lg text-white rounded-xl font-semibold hover:bg-opacity-40 transition-all border border-white border-opacity-30">
                 <i class="fas fa-book mr-2"></i>

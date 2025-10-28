@@ -1,210 +1,393 @@
 {% extends "base.html" %}
 {% block title %}
-Dự đoán thất nghiệp
+Dự đoán Thất nghiệp
 {% endblock %}
+
 {% block content %}
-<div class="card w-full max-w-xl mx-auto my-10 bg-base-100 shadow-xl p-6 md:p-10">
-    <div class="card-body p-0">
-        <h1 class="text-3xl font-bold text-center text-primary mb-2">
-            📊 Dự đoán Rủi ro Thất nghiệp
-        </h1>
-        <p class="text-center text-base-content/80 mb-6">
-            Nhập thông tin nhân khẩu học để dự đoán rủi ro thất nghiệp.
-        </p>
-    </div>
-    <div class="space-y-8">
-        <a href="{% url 'predict' %}"
-            class="inline-block mb-6 px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-700 transition-all"
-            style="box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
-            <i class="fas fa-user-times"></i>
-            Chuyển đến Dự đoán Thu nhập
-        </a>
-    </div>
-    <form id="unemployment-form" class="space-y-4">
+<div class="min-h-screen py-12 px-4" style="background: linear-gradient(135deg, #f5f7fa 0%, #e8ebf2 100%);">
+    <div class="max-w-4xl mx-auto">
 
-        <label class="form-control w-full">
-            <div class="label"><span class="label-text">Tuổi (Age):</span></div>
-            <input type="number" id="age" name="age" value="30" required class="input input-bordered w-full"
-                placeholder="Ví dụ: 30" />
-        </label>
+        <div class="text-center mb-12" style="animation: fadeIn 0.8s ease-out;">
+            <h1 class="text-5xl font-extrabold mb-4">
+                <span
+                    style="background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text; animation: gradient 3s linear infinite;">
+                    Dự Đoán Rủi Ro Thất Nghiệp
+                </span>
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Nhập thông tin nhân khẩu học để dự đoán rủi ro thất nghiệp của bạn
+            </p>
+        </div>
 
-        <label class="form-control w-full">
-            <div class="label"><span class="label-text">Số năm Học vấn (Education-num):</span></div>
-            <input type="number" id="education-num" name="education-num" value="13" required
-                class="input input-bordered w-full" placeholder="Ví dụ: 13 (Cử nhân)" />
-        </label>
+        <div class="space-y-8">
+            <a href="{% url 'predict' %}"
+                class="inline-block mb-6 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:from-indigo-600 hover:to-purple-700 transition-all transform hover:scale-105"
+                style="box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+                <i class="fas fa-dollar-sign"></i>
+                Chuyển đến Dự đoán Thu nhập
+            </a>
+        </div>
 
-        <label class="form-control w-full">
-            <div class="label"><span class="label-text">Tình trạng Hôn nhân (Marital-status):</span></div>
-            <select id="marital-status" name="marital-status" class="select select-bordered w-full">
-                <option value="?">Không rõ</option>
-                <option value="Married-civ-spouse">Đã kết hôn (vợ/chồng dân sự)</option>
-                <option value="Never-married">Chưa kết hôn</option>
-                <option value="Divorced">Đã ly hôn</option>
-                <option value="Separated">Ly thân</option>
-                <option value="Widowed">Góa</option>
-                <option value="Married-spouse-absent">Đã kết hôn (vắng mặt)</option>
-                <option value="Married-AF-spouse">Đã kết hôn (Quân đội)</option>
-            </select>
-        </label>
+        <div class="bg-white rounded-2xl shadow-2xl" style="transition: transform 0.3s ease, box-shadow 0.3s ease;">
+            <div class="p-8 md:p-12">
 
-        <label class="form-control w-full">
-            <div class="label"><span class="label-text">Nghề nghiệp (Occupation):</span></div>
-            <select id="occupation" name="occupation" class="select select-bordered w-full">
-                <option value="?">Không rõ / Chưa có</option>
-                <option value="Tech-support">Hỗ trợ Kỹ thuật</option>
-                <option value="Craft-repair">Sửa chữa</option>
-                <option value="Other-service">Dịch vụ khác</option>
-                <option value="Sales">Bán hàng</option>
-                <option value="Exec-managerial">Quản lý/Điều hành</option>
-                <option value="Prof-specialty">Chuyên môn</option>
-                <option value="Handlers-cleaners">Lao công/Bốc vác</option>
-                <option value="Machine-op-inspct">Vận hành máy móc</option>
-                <option value="Adm-clerical">Hành chính văn phòng</option>
-                <option value="Farming-fishing">Nông nghiệp/Ngư nghiệp</option>
-                <option value="Transport-moving">Vận tải</option>
-                <option value="Priv-house-serv">Giúp việc</option>
-                <option value="Protective-serv">Bảo vệ</option>
-                <option value="Armed-Forces">Quân đội</option>
-            </select>
-        </label>
+                <form id="unemployment-form" class="space-y-6">
 
-        <label class="form-control w-full">
-            <div class="label"><span class="label-text">Mối quan hệ trong gia đình (Relationship):</span></div>
-            <select id="relationship" name="relationship" class="select select-bordered w-full">
-                <option value="?">Không rõ</option>
-                <option value="Wife">Vợ</option>
-                <option value="Own-child">Con ruột</option>
-                <option value="Husband">Chồng</option>
-                <option value="Not-in-family">Không phải thành viên gia đình</option>
-                <option value="Other-relative">Họ hàng khác</option>
-                <option value="Unmarried">Chưa kết hôn (sống chung)</option>
-            </select>
-        </label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        <label class="form-control w-full">
-            <div class="label"><span class="label-text">Chủng tộc (Race):</span></div>
-            <select id="race" name="race" class="select select-bordered w-full">
-                <option value="?">Không rõ</option>
-                <option value="White">Da trắng</option>
-                <option value="Asian-Pac-Islander">Châu Á/Đảo Thái Bình Dương</option>
-                <option value="Amer-Indian-Eskimo">Người Mỹ bản địa/Eskimo</option>
-                <option value="Other">Khác</option>
-                <option value="Black">Da đen</option>
-            </select>
-        </label>
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-birthday-cake" style="color: #667eea;"></i>
+                                    Tuổi (Age)
+                                </span>
+                            </label>
+                            <input type="number" id="age" name="age" value="30" required min="17" max="100"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all"
+                                placeholder="Ví dụ: 30" />
+                            <p class="text-xs text-gray-500 mt-1">Độ tuổi từ 17-100</p>
+                        </div>
 
-        <label class="form-control w-full">
-            <div class="label"><span class="label-text">Giới tính (Sex):</span></div>
-            <select id="sex" name="sex" class="select select-bordered w-full">
-                <option value="?">Không rõ</option>
-                <option value="Female">Nữ</option>
-                <option value="Male">Nam</option>
-            </select>
-        </label>
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-graduation-cap" style="color: #667eea;"></i>
+                                    Số năm Học vấn
+                                </span>
+                            </label>
+                            <input type="number" id="education-num" name="education-num" value="13" required min="1"
+                                max="20"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all"
+                                placeholder="Ví dụ: 13 (Cử nhân)" />
+                            <p class="text-xs text-gray-500 mt-1">13 = Cử nhân, 16 = Tiến sĩ</p>
+                        </div>
 
-        <label class="form-control w-full">
-            <div class="label"><span class="label-text">Số giờ làm mỗi tuần (Hours-per-week):</span></div>
-            <input type="number" id="hours-per-week" name="hours-per-week" value="40" required
-                class="input input-bordered w-full" placeholder="Ví dụ: 40" />
-        </label>
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-ring" style="color: #667eea;"></i>
+                                    Tình trạng Hôn nhân
+                                </span>
+                            </label>
+                            <select id="marital-status" name="marital-status"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all">
+                                <option value="?">❓ Không rõ</option>
+                                <option value="Married-civ-spouse">💑 Đã kết hôn</option>
+                                <option value="Never-married">🙍 Chưa kết hôn</option>
+                                <option value="Divorced">💔 Đã ly hôn</option>
+                                <option value="Separated">🚶 Ly thân</option>
+                                <option value="Widowed">🖤 Góa</option>
+                                <option value="Married-spouse-absent">👥 Đã kết hôn (vắng mặt)</option>
+                                <option value="Married-AF-spouse">🎖️ Đã kết hôn (Quân đội)</option>
+                            </select>
+                        </div>
 
-        <label class="form-control w-full">
-            <div class="label"><span class="label-text">Quốc gia bản xứ (Native Country):</span></div>
-            <select id="native-country" name="native-country" class="select select-bordered w-full">
-                <option value="?">Không rõ</option>
-                <option value="United-States">Hoa Kỳ</option>
-                <option value="Mexico">Mexico</option>
-                <option value="Philippines">Philippines</option>
-                <option value="Germany">Đức</option>
-                <option value="Canada">Canada</option>
-                <option value="Puerto-Rico">Puerto-Rico</option>
-                <option value="El-Salvador">El-Salvador</option>
-                <option value="India">Ấn Độ</option>
-                <option value="Cuba">Cuba</option>
-                <option value="England">Anh</option>
-                <option value="Jamaica">Jamaica</option>
-                <option value="South">Nam Hàn (South)</option>
-                <option value="China">Trung Quốc</option>
-                <option value="Italy">Ý</option>
-                <option value="Dominican-Republic">Cộng hòa Dominica</option>
-                <option value="Vietnam">Việt Nam</option>
-                <option value="Guatemala">Guatemala</option>
-                <option value="Japan">Nhật Bản</option>
-                <option value="Poland">Ba Lan</option>
-                <option value="Columbia">Columbia</option>
-                <option value="Taiwan">Đài Loan</option>
-                <option value="Haiti">Haiti</option>
-                <option value="Iran">Iran</option>
-                <option value="Portugal">Bồ Đào Nha</option>
-                <option value="Nicaragua">Nicaragua</option>
-                <option value="Peru">Peru</option>
-                <option value="France">Pháp</option>
-                <option value="Greece">Hy Lạp</option>
-                <option value="Ecuador">Ecuador</option>
-                <option value="Ireland">Ireland</option>
-                <option value="Hong">Hồng Kông</option>
-                <option value="Cambodia">Campuchia</option>
-                <option value="Trinadad&Tobago">Trinadad & Tobago</option>
-                <option value="Thailand">Thái Lan</option>
-                <option value="Laos">Lào</option>
-                <option value="Yugoslavia">Nam Tư</option>
-                <option value="Outlying-US(Guam-USVI-etc)">Lãnh thổ hải ngoại Hoa Kỳ</option>
-                <option value="Honduras">Honduras</option>
-                <option value="Hungary">Hungary</option>
-                <option value="Scotland">Scotland</option>
-                <option value="Holand-Netherlands">Hà Lan</option>
-            </select>
-        </label>
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-briefcase" style="color: #667eea;"></i>
+                                    Nghề nghiệp
+                                </span>
+                            </label>
+                            <select id="occupation" name="occupation"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all">
+                                <option value="?">❓ Không rõ / Chưa có</option>
+                                <option value="Tech-support">💻 Hỗ trợ Kỹ thuật</option>
+                                <option value="Craft-repair">🔧 Sửa chữa</option>
+                                <option value="Other-service">🛎️ Dịch vụ khác</option>
+                                <option value="Sales">🛒 Bán hàng</option>
+                                <option value="Exec-managerial">👔 Quản lý/Điều hành</option>
+                                <option value="Prof-specialty">🎓 Chuyên môn</option>
+                                <option value="Handlers-cleaners">🧹 Lao công/Bốc vác</option>
+                                <option value="Machine-op-inspct">⚙️ Vận hành máy móc</option>
+                                <option value="Adm-clerical">📋 Hành chính văn phòng</option>
+                                <option value="Farming-fishing">🌾 Nông nghiệp/Ngư nghiệp</option>
+                                <option value="Transport-moving">🚚 Vận tải</option>
+                                <option value="Priv-house-serv">🏠 Giúp việc</option>
+                                <option value="Protective-serv">🛡️ Bảo vệ</option>
+                                <option value="Armed-Forces">🎖️ Quân đội</option>
+                            </select>
+                        </div>
 
-        <button type="submit" class="btn btn-primary w-full mt-6">
-            Dự đoán Rủi ro Thất nghiệp
-        </button>
-    </form>
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-users" style="color: #667eea;"></i>
+                                    Mối quan hệ trong gia đình
+                                </span>
+                            </label>
+                            <select id="relationship" name="relationship"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all">
+                                <option value="?">❓ Không rõ</option>
+                                <option value="Wife">👰 Vợ</option>
+                                <option value="Own-child">👶 Con ruột</option>
+                                <option value="Husband">🤵 Chồng</option>
+                                <option value="Not-in-family">🚶 Không phải thành viên gia đình</option>
+                                <option value="Other-relative">👨‍👩‍👧 Họ hàng khác</option>
+                                <option value="Unmarried">💑 Chưa kết hôn (sống chung)</option>
+                            </select>
+                        </div>
 
-    <div id="result-container" class="mt-8 pt-4 border-t border-base-200 text-center">
-        <h2 class="text-xl font-semibold mb-4">Kết quả Dự đoán:</h2>
-        <div class="flex flex-col items-center space-y-4">
-            <div id="gauge-chart" class="radial-progress text-primary"
-                style="--value:0; --size:6rem; --thickness: 0.8rem;">
-                <span id="gauge-text" class="text-2xl font-bold">0%</span>
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-globe" style="color: #667eea;"></i>
+                                    Chủng tộc
+                                </span>
+                            </label>
+                            <select id="race" name="race"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all">
+                                <option value="?">❓ Không rõ</option>
+                                <option value="White">⚪ Da trắng</option>
+                                <option value="Asian-Pac-Islander">🌏 Châu Á/Đảo Thái Bình Dương</option>
+                                <option value="Amer-Indian-Eskimo">🏔️ Người Mỹ bản địa/Eskimo</option>
+                                <option value="Other">🌍 Khác</option>
+                                <option value="Black">⚫ Da đen</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-venus-mars" style="color: #667eea;"></i>
+                                    Giới tính
+                                </span>
+                            </label>
+                            <select id="sex" name="sex"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all">
+                                <option value="?">❓ Không rõ</option>
+                                <option value="Female">♀️ Nữ</option>
+                                <option value="Male">♂️ Nam</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-clock" style="color: #667eea;"></i>
+                                    Giờ làm việc/tuần
+                                </span>
+                            </label>
+                            <input type="number" id="hours-per-week" name="hours-per-week" value="40" required min="1"
+                                max="100"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all"
+                                placeholder="Ví dụ: 40" />
+                            <p class="text-xs text-gray-500 mt-1">Số giờ làm việc mỗi tuần</p>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block mb-2">
+                                <span class="font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-flag" style="color: #667eea;"></i>
+                                    Quốc gia bản xứ
+                                </span>
+                            </label>
+                            <select id="native-country" name="native-country"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all">
+                                <option value="?">❓ Không rõ</option>
+                                <option value="United-States">Hoa Kỳ</option>
+                                <option value="Mexico">Mexico</option>
+                                <option value="Philippines">Philippines</option>
+                                <option value="Germany">Đức</option>
+                                <option value="Canada">Canada</option>
+                                <option value="Puerto-Rico">Puerto-Rico</option>
+                                <option value="El-Salvador">El-Salvador</option>
+                                <option value="India">Ấn Độ</option>
+                                <option value="Cuba">Cuba</option>
+                                <option value="England">Anh</option>
+                                <option value="Jamaica">Jamaica</option>
+                                <option value="South">Nam Hàn</option>
+                                <option value="China">Trung Quốc</option>
+                                <option value="Italy">Ý</option>
+                                <option value="Dominican-Republic">Cộng hòa Dominica</option>
+                                <option value="Vietnam">Việt Nam</option>
+                                <option value="Guatemala">Guatemala</option>
+                                <option value="Japan">Nhật Bản</option>
+                                <option value="Poland">Ba Lan</option>
+                                <option value="Columbia">Columbia</option>
+                                <option value="Taiwan">Đài Loan</option>
+                                <option value="Haiti">Haiti</option>
+                                <option value="Iran">Iran</option>
+                                <option value="Portugal">Bồ Đào Nha</option>
+                                <option value="Nicaragua">Nicaragua</option>
+                                <option value="Peru">Peru</option>
+                                <option value="France">Pháp</option>
+                                <option value="Greece">Hy Lạp</option>
+                                <option value="Ecuador">Ecuador</option>
+                                <option value="Ireland">Ireland</option>
+                                <option value="Hong">Hồng Kông</option>
+                                <option value="Cambodia">Campuchia</option>
+                                <option value="Trinadad&Tobago">Trinadad & Tobago</option>
+                                <option value="Thailand">Thái Lan</option>
+                                <option value="Laos">Lào</option>
+                                <option value="Yugoslavia">Nam Tư</option>
+                                <option value="Outlying-US(Guam-USVI-etc)">Lãnh thổ hải ngoại Hoa Kỳ</option>
+                                <option value="Honduras">Honduras</option>
+                                <option value="Hungary">Hungary</option>
+                                <option value="Scotland">Scotland</option>
+                                <option value="Holand-Netherlands">Hà Lan</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="pt-6">
+                        <button type="submit"
+                            class="w-full py-4 px-6 text-white text-lg font-semibold rounded-lg shadow-lg border-none transition-all"
+                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); transition: opacity 0.3s ease, transform 0.3s ease;"
+                            onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)';"
+                            onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)';">
+                            <i class="fas fa-chart-line"></i>
+                            Dự đoán Rủi ro ngay
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+
             </div>
-            <p id="result" class="text-lg font-medium max-w-md">---</p>
+        </div>
+
+        <div id="result-container" class="mt-8 bg-white rounded-2xl shadow-2xl"
+            style="display:none; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+            <div class="p-8 md:p-12">
+
+                <h2 class="text-3xl font-bold text-center mb-8"
+                    style="background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text;">
+                    <i class="fas fa-chart-pie"></i> Kết quả Dự đoán
+                </h2>
+
+                <div id="loading" class="text-center py-12" style="display:none;">
+                    <div
+                        class="inline-block w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin">
+                    </div>
+                    <p class="mt-4 text-lg text-gray-600">Đang phân tích dữ liệu...</p>
+                </div>
+
+                <div id="result-content" class="hidden">
+                    <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
+                        <div class="text-center">
+                            <div class="relative inline-flex items-center justify-center"
+                                style="width: 12rem; height: 12rem;">
+                                <svg class="transform -rotate-90" style="width: 12rem; height: 12rem;">
+                                    <circle cx="96" cy="96" r="88" stroke="#e5e7eb" stroke-width="16" fill="none">
+                                    </circle>
+                                    <circle id="gauge-circle" cx="96" cy="96" r="88" stroke="#667eea" stroke-width="16"
+                                        fill="none" stroke-dasharray="552.92" stroke-dashoffset="552.92"
+                                        stroke-linecap="round"
+                                        style="transition: stroke-dashoffset 1s ease, stroke 0.5s ease;"></circle>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <div id="gauge-text" class="text-4xl font-bold" style="color: #667eea;">0%</div>
+                                    <div class="text-sm text-gray-500 mt-1">Xác suất</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 text-center lg:text-left">
+                            <div class="p-6 rounded-lg shadow-lg" id="result-alert"
+                                style="transition: all 0.3s ease; background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%);">
+                                <div class="flex items-start gap-4">
+                                    <i class="fas fa-info-circle text-2xl" style="color: #667eea;"></i>
+                                    <div>
+                                        <h3 class="font-bold text-xl mb-2 text-gray-800">Dự đoán của bạn</h3>
+                                        <p id="result" class="text-lg text-gray-700"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 flex gap-3 justify-center lg:justify-start">
+                                <button
+                                    onclick="document.getElementById('unemployment-form').reset(); document.getElementById('result-container').style.display='none';"
+                                    class="px-6 py-3 border-2 rounded-lg font-semibold transition-all"
+                                    style="border-color: #667eea; color: #667eea;"
+                                    onmouseover="this.style.backgroundColor='#667eea'; this.style.color='white';"
+                                    onmouseout="this.style.backgroundColor='transparent'; this.style.color='#667eea';">
+                                    <i class="fas fa-redo"></i>
+                                    Dự đoán mới
+                                </button>
+                                <a href="{% url 'history' %}"
+                                    class="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition-all">
+                                    <i class="fas fa-history"></i>
+                                    Xem lịch sử
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
-</div>
 
-<script>
-    // Hàm JavaScript để cập nhật biểu đồ Gauge
-    function updateGauge(probability) {
-        const gauge = document.getElementById('gauge-chart');
-        const gaugeText = document.getElementById('gauge-text');
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
 
-        gauge.style.setProperty('--value', probability);
-        gaugeText.innerText = `${probability}%`;
-
-        // Tùy chỉnh màu theo rủi ro (ví dụ: > 50% là rủi ro cao)
-        if (probability >= 50) {
-            gauge.classList.add('text-error');
-            gauge.classList.remove('text-warning', 'text-success');
-        } else if (probability >= 20) {
-            gauge.classList.add('text-warning');
-            gauge.classList.remove('text-success', 'text-error');
-        } else {
-            gauge.classList.add('text-success'); // Rủi ro thấp
-            gauge.classList.remove('text-warning', 'text-error');
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 
-    // Bắt sự kiện form submit
+    @keyframes gradient {
+        0% {
+            background-position: 0% center;
+        }
+
+        100% {
+            background-position: 200% center;
+        }
+    }
+
+    input:focus,
+    select:focus {
+        transform: scale(1.01);
+    }
+</style>
+
+<script>
+    function updateGauge(prediction, probability) {
+        const gaugeCircle = document.getElementById('gauge-circle');
+        const gaugeText = document.getElementById('gauge-text');
+        const resultAlert = document.getElementById('result-alert');
+
+        const circumference = 552.92;
+        const offset = circumference - (probability / 100) * circumference;
+
+        gaugeCircle.style.strokeDashoffset = offset;
+        gaugeText.innerText = `${probability}%`;
+
+        if (prediction == 'Thất nghiệp') {
+            gaugeCircle.style.stroke = '#ef4444';
+            gaugeText.style.color = '#ef4444';
+            resultAlert.style.background = 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)';
+        } else {
+            gaugeCircle.style.stroke = '#10b981';
+            gaugeText.style.color = '#10b981';
+            resultAlert.style.background = 'linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)';
+        }
+    }
+
     document.getElementById('unemployment-form').addEventListener('submit', function (e) {
         e.preventDefault();
 
-        const resultEl = document.getElementById('result');
-        const loadingEl = document.getElementById('loading'); // Giả sử bạn có 1 spinner
+        const resultContainer = document.getElementById('result-container');
+        const loading = document.getElementById('loading');
+        const resultContent = document.getElementById('result-content');
 
-        // 1. Thu thập dữ liệu từ form
+        resultContainer.style.display = 'block';
+        loading.style.display = 'block';
+        resultContent.classList.add('hidden');
+
+        setTimeout(() => {
+            resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+
         const data = {
             'age': parseInt(document.getElementById('age').value),
             'education-num': parseInt(document.getElementById('education-num').value),
@@ -215,36 +398,39 @@ Dự đoán thất nghiệp
             'sex': document.getElementById('sex').value,
             'hours-per-week': parseInt(document.getElementById('hours-per-week').value),
             'native-country': document.getElementById('native-country').value,
-            // Gửi capital-gain/loss = 0
             'capital-gain': 0,
             'capital-loss': 0,
         };
 
-        console.log("Dữ liệu gửi đi:", data); // Kiểm tra dữ liệu
-
-        // 2. Gửi dữ liệu đến API THẤT NGHIỆP
-        fetch('/app/api/predict_unemployment/', { // <-- SỬ DỤNG URL MỚI
+        fetch('/app/api/predict_unemployment/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // (Bạn cần CSRF token nếu không dùng @csrf_exempt)
             },
             body: JSON.stringify(data)
         })
             .then(response => response.json())
             .then(data => {
+                loading.style.display = 'none';
+                resultContent.classList.remove('hidden');
+
                 if (data.prediction) {
-                    // Cập nhật văn bản
-                    resultEl.innerHTML = `Dự đoán: <strong>${data.prediction}</strong> (với xác suất <strong>${data.probability}%</strong>).`;
-                    // Cập nhật Đồng hồ đo
-                    updateGauge(data.probability);
+                    const resultEl = document.getElementById('result');
+                    const riskLevel = data.probability >= 50 ? 'cao' : (data.probability >= 20 ? 'trung bình' : 'thấp');
+                    const riskColor = data.probability >= 50 ? '#ef4444' : (data.probability >= 20 ? '#f59e0b' : '#10b981');
+
+                    resultEl.innerHTML = `Tỉ lệ ${data.prediction} của bạn ở mức <strong style="color: ${riskColor};">${riskLevel}</strong> với xác suất <strong>${data.probability}%</strong>`;
+
+                    updateGauge(data.prediction, data.probability);
                 } else {
-                    resultEl.innerText = `Lỗi: ${data.error}`;
+                    document.getElementById('result').innerText = `Lỗi: ${data.error}`;
                 }
             })
             .catch(error => {
+                loading.style.display = 'none';
+                resultContent.classList.remove('hidden');
                 console.error('Error:', error);
-                resultEl.innerText = 'Đã xảy ra lỗi khi kết nối server.';
+                document.getElementById('result').innerHTML = '<span style="color: #ef4444;">Đã xảy ra lỗi khi kết nối server. Vui lòng thử lại!</span>';
             });
     });
 </script>
